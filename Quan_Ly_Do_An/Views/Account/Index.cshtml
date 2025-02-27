@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/stylesheet.css" rel="stylesheet" />
+    <style>
+        html{
+            font-size:0.8rem;
+        }
+        #gmail{
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4 class="mb-3">Dữ liệu đăng nhập mẫu</h4>
+
+        <!-- Thông tin người dùng -->
+        <div class="mb-3">
+            <span class="badge bg-success">Role giảng viên</span>
+            <p>ngonhathuy501@gmail.com</p>
+        </div>
+
+        <div class="mb-3">
+            <span class="badge bg-success">Role trưởng nhóm</span>
+            <p>ngonhata@gmail.com</p>
+        </div>
+
+        <div class="mb-3">
+            <span class="badge bg-success">Role thành viên nhóm</span>
+            <p>destroyertansat@gmail.com</p>
+        </div>
+
+        <!-- Danh sách sinh viên mẫu -->
+        <div class="mb-3">
+            <span class="badge bg-success">Danh sách sinh viên mẫu</span>
+            <a href="~/File/dssvtest.xlsx" download class="btn btn-primary btn-sm mt-2">Download File</a>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="logo">
+        <img src="~/dist/assets/img/moutain.png" />
+        </div>
+        <div class="text-center mt-4 name">
+            Login
+        </div>
+
+
+        <form class="p-3 mt-3" method="post">
+            
+            <div class="form-field d-flex align-items-center">
+                
+                <input type="text" name="gmail" id="gmail" placeholder="Nhập Gmail trường Duy Tân" style="padding:15px 10px" maxlength="40" required>
+            </div>
+            <span id="emailFeedback" class="far fa-user" style="font-size:1rem;"></span>
+ 
+            <button id="btn_Login" asp-action="Login" asp-controller="Account" class="btn mt-3" type="submit" >Login</button>
+        </form>
+        <div class="text-center fs-6 " style="margin-top:20px">
+            <a href="#">Forget password?</a> or <a asp-action="Register" asp-controller="Login">Sign up</a>
+        </div>
+        @if (@ViewBag.message != null && @ViewBag.message == "Sai Email hoặc mật khẩu")
+        {
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> Sai Email hoặc mật khẩu
+
+            </div>
+        }
+        else if (@ViewBag.messageSuccess != null)
+        {
+            <div class="alert alert-success">
+                <strong>Success</strong> Bạn đã đăng kí thành công!
+
+            </div>
+        }
+    </div>
+
+    <script>
+        // Ensure that the modal is shown when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+            myModal.show();
+        });
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+
+   
+
+
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+@* <script>
+    $(document).ready(function () {
+        $('#gmail').on('input', function () {
+            var email = $(this).val();
+            if (email.endsWith('@@dtu.edu.vn') || email.endsWith('@@duytan.edu.vn')) {
+                $('#emailFeedback').text('Email này hợp lệ.').css('color', 'green');
+                $('#btn_Login').prop('disabled', false); // Kích hoạt nút khi email hợp lệ
+            } else {
+                $('#emailFeedback').text('Email phải có đuôi @@dtu.edu.vn hoặc @@duytan.edu.vn.').css('color', 'red');
+                $('#btn_Login').prop('disabled', true); // Vô hiệu hóa nút khi email không hợp lệ
+            }
+        });
+    });
+</script> *@
+

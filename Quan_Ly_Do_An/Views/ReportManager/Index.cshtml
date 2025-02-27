@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Quan_Ly_Do_An.Models.ClassModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<!-- Tab Navigation -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <!-- Tìm kiếm -->
+            <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm lớp hoặc mã môn..." />
+        </div>
+
+        <!-- Danh sách lớp hiển thị dưới dạng các card -->
+        <div class="col-12">
+            <div class="row" id="classCardsContainer">
+                @foreach (var classGroup in Model.GroupBy(m => m.ClassId))
+                {
+                    var classInfo = classGroup.First(); // Lấy thông tin của lớp từ phần tử đầu tiên của nhóm
+                    <div class="col-md-4 mb-3 class-card" data-class-id="@classInfo.ClassId" data-class-name="@classInfo.ClassName - @classInfo.SubjectCode">
+                        <div class="card shadow-sm" style="cursor: pointer;">
+                            <div class="card-body">
+                                <!-- Optional Icon -->
+                                <i class="bi bi-file-earmark-text me-2"></i>
+                                <strong>@classInfo.ClassName</strong> - @classInfo.SubjectCode
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kết quả tìm kiếm sẽ được cập nhật qua JavaScript -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const classItems = document.querySelectorAll('.class-card');
+        const searchInput = document.getElementById('searchInput');
+
+        // Tìm kiếm theo tên lớp hoặc mã môn
+        searchInput.addEventListener('input', function () {
+            const searchText = searchInput.value.toLowerCase();
+
+            classItems.forEach(item => {
+                const className = item.getAttribute('data-class-name').toLowerCase();
+
+                if (className.includes(searchText)) {
+                    item.style.display = 'block'; // Hiển thị lớp nếu khớp với tìm kiếm
+                } else {
+                    item.style.display = 'none'; // Ẩn lớp nếu không khớp
+                }
+            });
+        });
+
+        // Chuyển hướng tới trang chi tiết lớp khi click vào card
+        classItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const classId = this.getAttribute('data-class-id');
+                const className = this.getAttribute('data-class-name');
+                // Chuyển hướng tới URL với ClassId và ClassName
+                window.location.href = `/ReportManager/ClassDetail?classId=${classId}&className=${className}`;
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+
+

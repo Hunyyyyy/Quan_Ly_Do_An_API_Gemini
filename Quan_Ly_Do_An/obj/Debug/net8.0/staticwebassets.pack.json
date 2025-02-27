@@ -1,0 +1,1133 @@
+{
+  "Files": [
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\Quan_Ly_Do_An.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Quan_Ly_Do_An.dbrrebynft.bundle.scp.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\.editorconfig",
+      "PackagePath": "staticwebassets\\.editorconfig"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\.gitignore",
+      "PackagePath": "staticwebassets\\.gitignore"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\LICENSE",
+      "PackagePath": "staticwebassets"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\README.md",
+      "PackagePath": "staticwebassets\\README.md"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\css\\main.css",
+      "PackagePath": "staticwebassets\\assets\\css\\main.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\apple-touch-icon.png",
+      "PackagePath": "staticwebassets\\assets\\img\\apple-touch-icon.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\favicon.ico",
+      "PackagePath": "staticwebassets\\assets\\img\\favicon.ico"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\favicon.png",
+      "PackagePath": "staticwebassets\\assets\\img\\favicon.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\hero-bg.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\hero-bg.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-1.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-2.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-2.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-3.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-3.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-4.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-4.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-5.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-5.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-6.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-6.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-7.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-7.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-8.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-8.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\masonry-portfolio\\masonry-portfolio-9.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\masonry-portfolio\\masonry-portfolio-9.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\portfolio\\app-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\portfolio\\app-1.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\portfolio\\books-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\portfolio\\books-1.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\portfolio\\branding-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\portfolio\\branding-1.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\portfolio\\product-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\portfolio\\product-1.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\profile-img.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\profile-img.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\services.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\services.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\testimonials\\testimonials-1.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\testimonials\\testimonials-1.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\testimonials\\testimonials-2.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\testimonials\\testimonials-2.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\testimonials\\testimonials-3.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\testimonials\\testimonials-3.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\img\\testimonials\\testimonials-4.jpg",
+      "PackagePath": "staticwebassets\\assets\\img\\testimonials\\testimonials-4.jpg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\js\\main.js",
+      "PackagePath": "staticwebassets\\assets\\js\\main.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\scss\\Readme.txt",
+      "PackagePath": "staticwebassets\\assets\\scss\\Readme.txt"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\aos\\aos.cjs.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\aos\\aos.cjs.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\aos\\aos.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\aos\\aos.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\aos\\aos.esm.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\aos\\aos.esm.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\aos\\aos.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\aos\\aos.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\aos\\aos.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\aos\\aos.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.json",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.json"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.scss",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap-icons\\bootstrap-icons.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap-icons\\fonts\\bootstrap-icons.woff",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap-icons\\fonts\\bootstrap-icons.woff"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap-icons\\fonts\\bootstrap-icons.woff2",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap-icons\\fonts\\bootstrap-icons.woff2"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\css\\prb.txt",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\css\\prb.txt"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\bootstrap\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\bootstrap\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\glightbox\\css\\glightbox.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\glightbox\\css\\glightbox.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\glightbox\\css\\glightbox.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\glightbox\\css\\glightbox.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\glightbox\\js\\glightbox.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\glightbox\\js\\glightbox.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\glightbox\\js\\glightbox.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\glightbox\\js\\glightbox.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\imagesloaded\\imagesloaded.pkgd.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\imagesloaded\\imagesloaded.pkgd.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\isotope-layout\\isotope.pkgd.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\isotope-layout\\isotope.pkgd.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\isotope-layout\\isotope.pkgd.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\isotope-layout\\isotope.pkgd.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\php-email-form\\validate.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\php-email-form\\validate.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\purecounter\\purecounter_vanilla.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\purecounter\\purecounter_vanilla.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\purecounter\\purecounter_vanilla.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\purecounter\\purecounter_vanilla.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\swiper\\swiper-bundle.min.css",
+      "PackagePath": "staticwebassets\\assets\\vendor\\swiper\\swiper-bundle.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\swiper\\swiper-bundle.min.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\swiper\\swiper-bundle.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\swiper\\swiper-bundle.min.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\swiper\\swiper-bundle.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\typed.js\\typed.cjs",
+      "PackagePath": "staticwebassets\\assets\\vendor\\typed.js\\typed.cjs"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\typed.js\\typed.cjs.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\typed.js\\typed.cjs.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\typed.js\\typed.module.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\typed.js\\typed.module.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\typed.js\\typed.module.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\typed.js\\typed.module.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\typed.js\\typed.umd.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\typed.js\\typed.umd.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\typed.js\\typed.umd.js.map",
+      "PackagePath": "staticwebassets\\assets\\vendor\\typed.js\\typed.umd.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\assets\\vendor\\waypoints\\noframework.waypoints.js",
+      "PackagePath": "staticwebassets\\assets\\vendor\\waypoints\\noframework.waypoints.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\css\\StyleGroup.css",
+      "PackagePath": "staticwebassets\\css\\StyleGroup.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\css\\StyleSheet.css",
+      "PackagePath": "staticwebassets\\css\\StyleSheet.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\401.html",
+      "PackagePath": "staticwebassets\\dist\\401.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\404.html",
+      "PackagePath": "staticwebassets\\dist\\404.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\500.html",
+      "PackagePath": "staticwebassets\\dist\\500.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\demo\\chart-area-demo.js",
+      "PackagePath": "staticwebassets\\dist\\assets\\demo\\chart-area-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\demo\\chart-bar-demo.js",
+      "PackagePath": "staticwebassets\\dist\\assets\\demo\\chart-bar-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\demo\\chart-pie-demo.js",
+      "PackagePath": "staticwebassets\\dist\\assets\\demo\\chart-pie-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\demo\\datatables-demo.js",
+      "PackagePath": "staticwebassets\\dist\\assets\\demo\\datatables-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\anh2.png",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\anh2.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\error-404-monochrome.svg",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\error-404-monochrome.svg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\gmailimages.png",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\gmailimages.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\job.png",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\job.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\moutain.png",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\moutain.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\profile.png",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\profile.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\assets\\img\\undraw_work_chat_re_qes4.svg",
+      "PackagePath": "staticwebassets\\dist\\assets\\img\\undraw_work_chat_re_qes4.svg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\charts.html",
+      "PackagePath": "staticwebassets\\dist\\charts.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\css\\StyleSheet.css",
+      "PackagePath": "staticwebassets\\dist\\css\\StyleSheet.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\css\\styles.css",
+      "PackagePath": "staticwebassets\\dist\\css\\styles.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\index.html",
+      "PackagePath": "staticwebassets\\dist\\index.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\js\\datatables-simple-demo.js",
+      "PackagePath": "staticwebassets\\dist\\js\\datatables-simple-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\js\\scripts.js",
+      "PackagePath": "staticwebassets\\dist\\js\\scripts.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\layout-sidenav-light.html",
+      "PackagePath": "staticwebassets\\dist\\layout-sidenav-light.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\layout-static.html",
+      "PackagePath": "staticwebassets\\dist\\layout-static.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\login.html",
+      "PackagePath": "staticwebassets\\dist\\login.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\password.html",
+      "PackagePath": "staticwebassets\\dist\\password.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\register.html",
+      "PackagePath": "staticwebassets\\dist\\register.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\dist\\tables.html",
+      "PackagePath": "staticwebassets\\dist\\tables.html"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\forms\\Readme.txt",
+      "PackagePath": "staticwebassets\\forms\\Readme.txt"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\forms\\contact.php",
+      "PackagePath": "staticwebassets\\forms\\contact.php"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-theme.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-theme.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-theme.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-theme.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-theme.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-theme.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-theme.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-theme.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\img\\moutain.png",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\img\\moutain.png"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\package-lock.json",
+      "PackagePath": "staticwebassets\\package-lock.json"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\package.json",
+      "PackagePath": "staticwebassets\\package.json"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\build-assets.js",
+      "PackagePath": "staticwebassets\\scripts\\build-assets.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\build-pug.js",
+      "PackagePath": "staticwebassets\\scripts\\build-pug.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\build-scripts.js",
+      "PackagePath": "staticwebassets\\scripts\\build-scripts.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\build-scss.js",
+      "PackagePath": "staticwebassets\\scripts\\build-scss.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\clean.js",
+      "PackagePath": "staticwebassets\\scripts\\clean.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\render-assets.js",
+      "PackagePath": "staticwebassets\\scripts\\render-assets.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\render-pug.js",
+      "PackagePath": "staticwebassets\\scripts\\render-pug.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\render-scripts.js",
+      "PackagePath": "staticwebassets\\scripts\\render-scripts.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\render-scss.js",
+      "PackagePath": "staticwebassets\\scripts\\render-scss.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\sb-watch.js",
+      "PackagePath": "staticwebassets\\scripts\\sb-watch.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\start-debug.js",
+      "PackagePath": "staticwebassets\\scripts\\start-debug.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\scripts\\start.js",
+      "PackagePath": "staticwebassets\\scripts\\start.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\assets\\demo\\chart-area-demo.js",
+      "PackagePath": "staticwebassets\\src\\assets\\demo\\chart-area-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\assets\\demo\\chart-bar-demo.js",
+      "PackagePath": "staticwebassets\\src\\assets\\demo\\chart-bar-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\assets\\demo\\chart-pie-demo.js",
+      "PackagePath": "staticwebassets\\src\\assets\\demo\\chart-pie-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\assets\\demo\\datatables-demo.js",
+      "PackagePath": "staticwebassets\\src\\assets\\demo\\datatables-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\assets\\img\\error-404-monochrome.svg",
+      "PackagePath": "staticwebassets\\src\\assets\\img\\error-404-monochrome.svg"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\js\\datatables-simple-demo.js",
+      "PackagePath": "staticwebassets\\src\\js\\datatables-simple-demo.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\js\\scripts.js",
+      "PackagePath": "staticwebassets\\src\\js\\scripts.js"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\authentication.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\authentication.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\dashboard.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\dashboard.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\error.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\error.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\footer.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\footer.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\head\\css.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\head\\css.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\head\\icons.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\head\\icons.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\head\\meta.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\head\\meta.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\head\\title.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\head\\title.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\navigation\\sidenav.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\navigation\\sidenav.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\navigation\\topnav.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\navigation\\topnav.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\layouts\\includes\\scripts.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\layouts\\includes\\scripts.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\401.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\401.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\404.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\404.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\500.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\500.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\charts.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\charts.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\includes\\datatable.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\includes\\datatable.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\includes\\page-header.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\includes\\page-header.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\index.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\index.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\layout-sidenav-light.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\layout-sidenav-light.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\layout-static.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\layout-static.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\login.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\login.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\password.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\password.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\register.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\register.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\pug\\pages\\tables.pug",
+      "PackagePath": "staticwebassets\\src\\pug\\pages\\tables.pug"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\_global.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\_global.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\_variables.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\_variables.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\layout\\_authentication.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\layout\\_authentication.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\layout\\_dashboard-default.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\layout\\_dashboard-default.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\layout\\_dashboard-fixed.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\layout\\_dashboard-fixed.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\layout\\_error.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\layout\\_error.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\navigation\\_nav.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\navigation\\_nav.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\navigation\\_topnav.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\navigation\\_topnav.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\navigation\\sidenav\\_sidenav-dark.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\navigation\\sidenav\\_sidenav-dark.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\navigation\\sidenav\\_sidenav-light.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\navigation\\sidenav\\_sidenav-light.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\navigation\\sidenav\\_sidenav.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\navigation\\sidenav\\_sidenav.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\plugins\\simple-datatables.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\plugins\\simple-datatables.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\styles.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\styles.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\variables\\_navigation.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\variables\\_navigation.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\src\\scss\\variables\\_spacing.scss",
+      "PackagePath": "staticwebassets\\src\\scss\\variables\\_spacing.scss"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\0f6e883c-9efd-4305-b968-7db354b5ede2_Các cách theo dõi thời gian.docx",
+      "PackagePath": "staticwebassets\\uploads\\0f6e883c-9efd-4305-b968-7db354b5ede2_Các cách theo dõi thời gian.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\32aa04af-aac9-4d45-b7f4-3db738fb398e_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\32aa04af-aac9-4d45-b7f4-3db738fb398e_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\54afe4d2-7312-4d53-bdae-720883757726_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\54afe4d2-7312-4d53-bdae-720883757726_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\66809df0-3331-44ad-b6d7-45da8dfaf35f_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\66809df0-3331-44ad-b6d7-45da8dfaf35f_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\714b718c-e201-4ad9-ae72-5850608056fd_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\714b718c-e201-4ad9-ae72-5850608056fd_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\73b38d8e-a478-49bd-a7f0-495beff5e379_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\73b38d8e-a478-49bd-a7f0-495beff5e379_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\982d6b76-1579-4ee7-84fb-01faa0bba851_Ontapcs434 (2).docx",
+      "PackagePath": "staticwebassets\\uploads\\982d6b76-1579-4ee7-84fb-01faa0bba851_Ontapcs434 (2).docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\9b8d1a28-670b-4189-a7f0-28704819b16e_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\9b8d1a28-670b-4189-a7f0-28704819b16e_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\a6d2eb42-2b29-4f5e-8b9f-454bce263faf_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\a6d2eb42-2b29-4f5e-8b9f-454bce263faf_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\b5ca8636-53de-49e7-87d0-9829e48e2abe_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\b5ca8636-53de-49e7-87d0-9829e48e2abe_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\bdedba73-8a2b-4ef3-a78f-497ca200406e_KTPM_Nhom7.docx",
+      "PackagePath": "staticwebassets\\uploads\\bdedba73-8a2b-4ef3-a78f-497ca200406e_KTPM_Nhom7.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\cae56527-f03e-4135-933f-9fa28243b872_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\cae56527-f03e-4135-933f-9fa28243b872_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\d6089823-d6bd-4553-885b-e1ff8c30237f_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\d6089823-d6bd-4553-885b-e1ff8c30237f_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\f45aba90-3f8f-44a9-aa72-af732e311bec_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\f45aba90-3f8f-44a9-aa72-af732e311bec_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "E:\\LT_Web\\Quan_Ly_Do_An\\Quan_Ly_Do_An\\wwwroot\\uploads\\fc00d92e-2e22-4a4b-81c2-42dee7f0964e_Ưu tiên làm trước các chức năng.docx",
+      "PackagePath": "staticwebassets\\uploads\\fc00d92e-2e22-4a4b-81c2-42dee7f0964e_Ưu tiên làm trước các chức năng.docx"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Quan_Ly_Do_An.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Quan_Ly_Do_An.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Quan_Ly_Do_An.props",
+      "PackagePath": "build\\Quan_Ly_Do_An.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Quan_Ly_Do_An.props",
+      "PackagePath": "buildMultiTargeting\\Quan_Ly_Do_An.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Quan_Ly_Do_An.props",
+      "PackagePath": "buildTransitive\\Quan_Ly_Do_An.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

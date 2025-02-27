@@ -1,0 +1,484 @@
+﻿@{
+    ViewData["Title"] = "MainLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Quản Lý Đồ Án Nhóm - Lớp</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+    <!-- Favicons -->
+    <link href="~/assets/img/favicon.ico" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="~/assets/css/main.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet" />
+      <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999; /* Đặt z-index cao để nổi bật hơn */
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+            .notification-icon:hover {
+                transform: scale(1.1);
+            }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 12px;
+        }
+
+        .notification-dropdown {
+            display: none; /* Ẩn dropdown mặc định */
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Đảm bảo dropdown có z-index cao */
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            /* Thanh cuộn */
+            max-height: 300px; /* Chiều cao tối đa của dropdown */
+            overflow-y: auto; /* Kích hoạt thanh cuộn nếu nội dung vượt quá chiều cao */
+        }
+
+            .notification-dropdown.show {
+                display: block; /* Hiển thị dropdown khi có class 'show' */
+                opacity: 1; /* Thay đổi opacity khi hiển thị */
+                transform: translateY(0); /* Thay đổi transform khi hiển thị */
+            }
+
+        .notification-item {
+    position: relative;
+    width: 500px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    opacity: 0; /* Ẩn thông báo ban đầu */
+    transform: translateY(10px); /* Đẩy thông báo xuống dưới */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Thêm transition */
+}
+
+            .notification-item.show {
+    opacity: 1; /* Hiện thông báo */
+    transform: translateY(0); /* Trở về vị trí ban đầu */
+}
+.notification-item .unread-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.notification-item.read .unread-indicator {
+    display: none; /* Ẩn chấm đỏ khi đã đọc */
+}
+
+            .notification-item:last-child {
+                border-bottom: none;
+            }
+
+            .notification-item strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            /* Hiệu ứng hover cho các thẻ thông báo */
+            .notification-item:hover {
+                background-color: #f0f0f0; /* Thay đổi màu nền khi hover */
+                cursor: pointer; /* Thay đổi con trỏ khi hover */
+                transform: scale(1.02); /* Tăng kích thước nhẹ khi hover */
+                transition: background-color 0.3s ease, transform 0.2s ease; /* Thêm transition */
+            }
+    </style>
+</head>
+
+<body class="index-page">
+    @if (TempData["Message"] != null)
+    {
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <!-- Toast container positioned at the top-right -->
+            <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                    <div class="toast-header">
+                        <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                        <strong class="me-auto">Thông báo</strong>
+                        <small class="text-muted">Vừa xong</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                    </div>
+                    <div class="toast-body">
+                        @TempData["Message"]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Script to auto-show and hide toast after 3 seconds -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var toastEl = document.querySelector('.toast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            });
+        </script>
+    }
+    <div class="notification-container">
+        <a href="#" class="notification-icon" id="notification-icon" onclick="toggleNotifications()">
+            <i class="bi bi-bell navicon"></i>
+            <span class="notification-count" id="notification-count">0</span>
+        </a>
+        <div class="notification-dropdown" id="notification-dropdown">
+            <!-- Các thông báo sẽ được điền vào đây bằng JavaScript -->
+        </div>
+    </div>
+
+
+    <header id="header" class="header d-flex flex-column justify-content-center">
+
+        <i class="header-toggle d-xl-none bi bi-list"></i>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a asp-action="Index" asp-controller="Home" class="active"><i class="bi bi-house-door navicon"></i><span>Trang chủ</span></a></li>
+                <li><a asp-action="Index" asp-controller="UserInformation"><i class="bi bi-person-circle navicon"></i><span>Hồ sơ</span></a></li>
+                @if (Context.Session.GetString("Role") == "Student")
+                    {
+                <li><a asp-action="Index" asp-controller="Groups"><i class="bi bi-people-fill navicon"></i><span>Đồ án nhóm</span></a></li>
+
+                    }
+                else
+                    {
+                <li><a asp-action="Index" asp-controller="WorkSpace"><i class="bi bi-laptop navicon"></i><span>Lớp</span></a></li>
+                <li><a asp-action="Index" asp-controller="ReportManager"><i class="bi bi-bar-chart-line navicon"></i><span>Báo cáo</span></a></li>
+                   
+                    }
+                <li><a asp-action="Logout" asp-controller="Account"><i class="bi bi-box-arrow-right navicon"></i><span>Đăng xuất</span></a></li>
+            </ul>
+
+        </nav>
+
+    </header>
+
+    <main class="main">
+
+
+        <!-- Main Content Section -->
+        <section id="content" class="content section py-4">
+            <div class="container">
+                <!-- Khung bao bọc cho phần nội dung chính -->
+                <div class="content-box">
+                    <!-- Rendered View Content -->
+                    @RenderBody()
+
+                    <!-- Optionally render additional scripts if available -->
+                    @RenderSection("Scripts", required: false)
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+   
+@*     <footer id="footer" class="footer position-relative light-background">
+        <div class="container">
+            <h3 class="sitename">Brandon Johnson</h3>
+            <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p>
+            <div class="social-links d-flex justify-content-center">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-skype"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+            <div class="container">
+                <div class="copyright">
+                    <span>Copyright</span> <strong class="px-1 sitename">Alex Smith</strong> <span>All Rights Reserved</span>
+                </div>
+                <div class="credits">
+                    <!-- All the links in the footer should remain intact. -->
+                    <!-- You can delete the links only if you've purchased the pro version. -->
+                    <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                    <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                </div>
+            </div>
+        </div>
+    </footer> *@
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="~/assets/vendor/aos/aos.js"></script>
+    <script src="~/assets/vendor/typed.js/typed.umd.js"></script>
+    <script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="~/assets/vendor/waypoints/noframework.waypoints.js"></script>
+    <script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Thêm Chart.js từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+        <script>
+        document.getElementById('notification-icon').addEventListener('click', function (event) {
+            event.stopPropagation(); // Ngăn chặn sự kiện click từ việc lan truyền
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('show'); // Thay đổi class để hiển thị hoặc ẩn dropdown
+            console.log('click');
+            // Hiệu ứng cho từng thông báo
+            const items = dropdown.querySelectorAll('.notification-item');
+            if (dropdown.classList.contains('show')) {
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('show'); // Thêm class show cho từng thông báo
+                    }, index * 100); // Thêm độ trễ cho mỗi thông báo
+                });
+            } else {
+                items.forEach(item => {
+                    item.classList.remove('show'); // Xóa class show khi ẩn dropdown
+                });
+            }
+        });
+
+        // Đóng dropdown khi click ra ngoài
+        document.addEventListener('click', function () {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.remove('show'); // Xóa class 'show' để ẩn dropdown
+
+            // Ẩn các thông báo
+            const items = dropdown.querySelectorAll('.notification-item');
+            items.forEach(item => {
+                item.classList.remove('show'); // Xóa class show khi ẩn dropdown
+            });
+        });
+
+        // Gửi yêu cầu AJAX để lấy thông báo từ backend
+      // Gửi yêu cầu AJAX để lấy thông báo từ backend
+function loadNotifications(userId) {
+    $.ajax({
+        url: `/Home/GetNotifications?userId=${userId}`, // Đảm bảo userId được truyền vào
+        type: 'GET',
+        success: function (notifications) {
+            console.log('notifications', notifications);
+            // Đếm số lượng thông báo chưa đọc
+            const unreadNotifications = notifications.filter(notification => !notification.isRead); // Lọc ra thông báo chưa đọc
+            const unreadCount = unreadNotifications.length; // Số lượng thông báo chưa đọc
+
+            // Cập nhật số lượng thông báo chưa đọc
+            $('#notification-count').text(unreadCount);
+
+            // Cập nhật nội dung thông báo
+            const notificationDropdown = $('#notification-dropdown');
+            notificationDropdown.empty(); // Xóa nội dung hiện tại
+
+            notifications.forEach(notification => {
+                // Kiểm tra xem thông báo đã đọc hay chưa
+                const isReadClass = notification.isRead ? 'read' : 'unread';
+
+                const notificationItem = $('<div>')
+                    .addClass('notification-item show ' + isReadClass)
+                    .data('id', notification.notificationId) // Thêm data-id với notificationId
+                    .html(`
+                         <h5>Người gửi: ${notification.senderName}</h5>
+                        <strong>Nội dung: ${notification.message}</strong>
+                        <p><i>Ngày: ${new Date(notification.dateSent).toLocaleString()}</i></p>
+                        <div class="unread-indicator"></div> <!-- Chấm đỏ cho thông báo chưa đọc -->
+                    `);
+
+                notificationDropdown.append(notificationItem);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Lỗi khi tải thông báo:', error);
+        }
+    });
+}
+
+
+
+// Cập nhật thông báo khi trang web được tải
+window.onload = function() {
+    const userId = @Context.Session.GetInt32("UserId"); // Thay thế với userId thực tế, có thể lấy từ session hoặc từ cookie
+    loadNotifications(userId); // Truyền userId vào hàm
+};
+
+$(document).on('click', '.notification-item', function() {
+    const notificationId = $(this).data('id'); // Lấy ID thông báo
+
+    // Gửi yêu cầu AJAX để đánh dấu là đã đọc
+    $.ajax({
+    url: `/Home/MarkAsRead?notificationId=${notificationId}`,  // Kiểm tra URL ở đây
+    type: 'POST', // Kiểm tra loại HTTP method (POST hay GET)
+    success: function() {
+        // Cập nhật lại UI khi đã đánh dấu là đã đọc
+        $(this).addClass('read').removeClass('unread');
+    },
+    error: function(xhr, status, error) {
+        console.error('Lỗi khi đánh dấu thông báo là đã đọc:', error);
+    }
+});
+
+});
+
+
+
+        // Cập nhật thông báo khi trang web được tải
+       // window.onload = loadNotifications;
+
+
+    </script>
+</body>
+
+</html>
+
+@* <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Quản Lý Công Việc</title>
+
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="~/dist/css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/dist/css/StyleGroup.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    
+</head>
+
+<body class="sb-nav-fixed">
+
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
+        <button class="btnMenu btn-link btn-sm order-1 order-lg-0 me-4" id="sidebarToggle" href="#!">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a class="navbar-brand ps-3" asp-action="Index" asp-controller="Home">Quản Lý Đồ Án</a>
+        <button type="button" class="btn btn-outline-dark position-fixed end-10 m-3" style="right: 80px; z-index: 1050;">
+            <i class="bi bi-bell-fill" style="color: white; font-size: 1.2rem;"></i>
+            <span class="badge bg-danger ms-2">4</span>
+        </button>
+        <div class="d-flex ms-auto align-items-center">
+            <a asp-action="Logout" asp-controller="Account" class="btn btn-outline-info" style="margin-right:12px;">Logout</a>
+        </div>
+    </nav>
+
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="sb-sidenav-menu-heading">Cá nhân</div>
+                    <a asp-action="Index" asp-controller="User Information" class="nav-link">
+                        <div class="sb-nav-link-icon"><i class="bi bi-gear"></i></div>
+                        Hồ sơ cá nhân
+                    </a>
+                    <div class="sb-sidenav-menu-heading">Quản Lý Đồ Án</div>
+                    @if (Context.Session.GetString("Role") == "Student")
+                    {
+                        <a asp-action="Index" asp-controller="Groups" class="nav-link">
+                            <div class="sb-nav-link-icon"><i class="bi bi-people-fill"></i></div>
+                            Đồ án nhóm
+                        </a>
+                        <a asp-action="SendNotification" asp-controller="Home" class="nav-link">
+                            <div class="sb-nav-link-icon"><i class="bi bi-bell"></i></div>
+                            Gửi Thông Báo
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" asp-controller="WorkSpace" class="nav-link">
+                            <div class="sb-nav-link-icon"><i class="bi bi-folder-plus"></i></div>
+                            Không gian làm việc
+                        </a>
+                        <a asp -action="Index" asp-controller="ReportManager" class="nav-link">
+                            <div class="sb-nav-link-icon"><i class="bi bi-file-earmark-plus"></i></div>
+                            Quản lý báo cáo
+                        </a>
+                        <a asp-action="SendNotification" asp-controller="Home" class="nav-link">
+                            <div class="sb-nav-link-icon"><i class="bi bi-bell"></i></div>
+                            Gửi Thông Báo
+                        </a>
+                    }
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container bg-light rounded mt-5 p-4 shadow-sm">
+        @RenderBody()
+        @RenderSection("Scripts", required: false)
+    </div>
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/sb-admin-2.min.js"></script>
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="~/src/assets/demo/chart-area-demo.js"></script>
+    <script src="~/src/assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script src="~/src/js/datatables-simple-demo.js"></script>
+    <script src="~/src/js/scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> *@

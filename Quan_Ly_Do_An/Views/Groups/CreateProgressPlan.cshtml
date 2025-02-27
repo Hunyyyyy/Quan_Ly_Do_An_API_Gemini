@@ -1,0 +1,313 @@
+﻿
+   
+@{
+    Layout = "MainLayout";
+}
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <!-- Toast container positioned at the top-right -->
+    <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                <strong class="me-auto">Thông báo</strong>
+                <small class="text-muted">Vừa xong</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+            </div>
+            <div class="toast-body">
+                Kế hoạch đã được lưu thành công.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+
+    <!-- Phần nội dung kế hoạch: Bắt đầu ẩn -->
+    <div id="planContainer">
+        <h2 class="text-center mb-4">Lập Kế Hoạch Tiến Độ Cho Dự Án</h2>
+            <!-- Khu vực thông tin chung -->
+            <div class="card p-4 mb-4">
+                <h5>Thông tin dự án</h5>
+                <form id="projectInfoForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="projectName" class="form-label">Tên dự án</label>
+                        <input type="text" class="form-control" id="projectName" value="@ViewBag.PName" readonly>
+                        </div>
+                    <div class="col-md-6">
+                        <label for="startDate" class="form-label">Ngày bắt đầu dự án</label>
+                        @if (ViewBag.PStartDate != null)
+                        {
+                            <!-- Chuyển giá trị sang định dạng "yyyy-MM-dd" để phù hợp với input type="date" -->
+                            <input value="@ViewBag.PStartDate.ToString("yyyy-MM-dd")" type="date" class="form-control date" id="startDate" min="">
+                        }
+                        else
+                        {
+                            <input type="datetime-local" class="form-control date" id="startDate" min="">
+                        }
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="endDay" class="form-label">Ngày kết thúc dự án</label>
+                        @if (ViewBag.PEndDate != null)
+                        {
+                            <!-- Chuyển giá trị sang định dạng "yyyy-MM-dd" để phù hợp với input type="date" -->
+                            <input value="@ViewBag.PEndDate.ToString("yyyy-MM-dd")" type="date" class="form-control date" id="endDay" min="">
+                        }
+                        else
+                        {
+                            <input type="datetime-local" class="form-control date" id="endDay" min="">
+                        }
+                    </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Khu vực thêm giai đoạn -->
+            <div class="card p-4 mb-4">
+                <h5>Xác định các giai đoạn chính</h5>
+                <form id="phaseForm" class="row g-3">
+                    <div class="col-md-5">
+                        <label for="phaseName" class="form-label">Tên giai đoạn</label>
+                        <input type="text" class="form-control" id="phaseName" placeholder="Ví dụ: Phân tích yêu cầu" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="phaseStart" class="form-label">Ngày bắt đầu</label>
+                    <input type="date" class="form-control date" id="phaseStart" min="" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="phaseEnd" class="form-label">Ngày kết thúc</label>
+                    <input type="date" class="form-control date" id="phaseEnd" min="" required>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-success" onclick="addPhase()">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        
+
+        <!-- Khu vực danh sách giai đoạn -->
+        <div class="card p-4 mb-4">
+            <h5>Danh sách các giai đoạn</h5>
+            <table id="phaseTable" class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên giai đoạn</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="phaseList"></tbody>
+            </table>
+        </div>
+
+            <div class="text-end mt-4">
+                <button class="btn btn-primary" onclick="savePlan()">Lưu kế hoạch</button>
+            </div>
+
+    </div>
+</div>
+<script>
+    // Lấy thời gian hiện tại
+    var now = new Date();
+
+    // Định dạng thời gian theo kiểu "yyyy-mm-dd" (không có giờ phút)
+    var formattedDate = now.toISOString().slice(0, 10); // Lấy 10 ký tự đầu để chỉ có ngày (yyyy-mm-dd)
+
+    // Gán giá trị cho thuộc tính min của các phần tử có class "date"
+    document.querySelectorAll(".date").forEach(function (input) {
+        input.min = formattedDate;
+    });
+</script>
+
+<script>
+    let phases = [];
+    let phaseCounter = 1;
+
+    // Thêm giai đoạn vào danh sách
+    function addPhase() {
+        const phaseName = document.getElementById("phaseName").value.trim();
+        const phaseStart = document.getElementById("phaseStart").value;
+        const phaseEnd = document.getElementById("phaseEnd").value;
+
+        if (!phaseName || !phaseStart || !phaseEnd) {
+            alert("Vui lòng nhập đầy đủ thông tin giai đoạn!");
+            return;
+        }
+
+        phases.push({
+            id: phaseCounter,
+            name: phaseName,
+            start: phaseStart,
+            end: phaseEnd
+        });
+
+        renderPhaseList();
+        phaseCounter++;
+
+        // Xóa các trường nhập liệu
+        document.getElementById("phaseName").value = "";
+        document.getElementById("phaseStart").value = "";
+        document.getElementById("phaseEnd").value = "";
+    }
+
+    // Hiển thị danh sách giai đoạn
+    function renderPhaseList() {
+        const phaseList = document.getElementById("phaseList");
+        phaseList.innerHTML = "";
+
+        phases.forEach((phase) => {
+            const formattedStart = new Date(phase.start).toLocaleDateString('vi-VN');
+            const formattedEnd = new Date(phase.end).toLocaleDateString('vi-VN');
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>${phase.id}</td>
+                    <td>${phase.name}</td>
+                        <td>${formattedStart}</td>
+                        <td>${formattedEnd}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="removePhase(${phase.id})">Xóa</button>
+                    </td>
+                `;
+            phaseList.appendChild(row);
+        });
+    }
+
+    // Xóa giai đoạn
+    function removePhase(phaseId) {
+        phases = phases.filter((phase) => phase.id !== phaseId);
+        renderPhaseList();
+    }
+
+    // Lưu kế hoạch
+    function savePlan() {
+        const projectName = document.getElementById("projectName").value.trim();
+        const startDay = document.getElementById("startDate").value; // Sửa từ startDay thành startDate
+        const endDay = document.getElementById("endDay").value;
+
+        // Kiểm tra dữ liệu đầu vào
+        if (!projectName || !startDay || !endDay) {
+            alert("Vui lòng nhập đầy đủ thông tin dự án!");
+            return;
+        }
+
+        if (phases.length === 0) {
+            alert("Vui lòng thêm ít nhất một giai đoạn!");
+            return;
+        }
+
+        const planData = {
+            ProjectId: '@ViewBag.ProjectId', // Lấy ProjectId từ ViewBag
+            ProjectName: projectName,
+            StartDate: startDay,
+            EndDate: endDay,
+            Phases: phases.map(phase => ({
+                StageName: phase.name,
+                StartDate: phase.start,
+                EndDate: phase.end
+            }))
+        };
+
+        console.log(JSON.stringify(planData)); // Kiểm tra dữ liệu gửi đi
+
+        // Gửi dữ liệu sang Controller
+        fetch("/api/ProgressPlan/SavePlan", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(planData) // Gửi dữ liệu JSON
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hiển thị thông báo thành công và ẩn bảng nếu lưu thành công
+                if (data && data.message === "Kế hoạch đã được lưu thành công.") {
+                    // Hiển thị Toast
+                    var toastEl = document.querySelector('.toast');
+                    var toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+
+                    phases = [];  // Xóa danh sách giai đoạn
+                    renderPhaseList();  // Render lại bảng trống
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+                alert("Đã xảy ra lỗi khi lưu kế hoạch. Vui lòng thử lại!");
+            });
+    }
+
+</script>
+
+
+
+
+
+@*     // Thêm công việc
+    function addTask() {
+        const taskName = document.getElementById("taskName").value.trim();
+        const assignee = document.getElementById("assignee").value.trim();
+        const taskDueDate = document.getElementById("taskDueDate").value;
+
+        if (!taskName || !assignee || !taskDueDate) {
+            alert("Vui lòng nhập đầy đủ thông tin công việc!");
+            return;
+        }
+
+        tasks.push({
+            id: taskCounter,
+            name: taskName,
+            assignee: assignee,
+            dueDate: taskDueDate,
+            status: "Chưa hoàn thành",
+        });
+
+        renderTaskList();
+        taskCounter++;
+        document.getElementById("taskName").value = "";
+        document.getElementById("assignee").value = "";
+        document.getElementById("taskDueDate").value = "";
+    }
+
+    // Hiển thị danh sách công việc
+    function renderTaskList() {
+        const taskList = document.getElementById("taskList");
+        taskList.innerHTML = "";
+
+        tasks.forEach((task) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                    <td>${task.id}</td>
+                    <td>${task.name}</td>
+                    <td>${task.assignee}</td>
+                    <td>${task.dueDate}</td>
+                    <td>
+                        <select class="form-select" onchange="updateTaskStatus(${task.id}, this.value)">
+                            <option value="Chưa hoàn thành" ${task.status === "Chưa hoàn thành" ? "selected" : ""}>Chưa hoàn thành</option>
+                            <option value="Đang thực hiện" ${task.status === "Đang thực hiện" ? "selected" : ""}>Đang thực hiện</option>
+                            <option value="Hoàn thành" ${task.status === "Hoàn thành" ? "selected" : ""}>Hoàn thành</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="removeTask(${task.id})">Xóa</button>
+                    </td>
+                `;
+            taskList.appendChild(row);
+        });
+    }
+
+    // Cập nhật trạng thái công việc
+    function updateTaskStatus(taskId, newStatus) {
+        const task = tasks.find((task) => task.id === taskId);
+        if (task) {
+            task.status = newStatus;
+        }
+    } *@

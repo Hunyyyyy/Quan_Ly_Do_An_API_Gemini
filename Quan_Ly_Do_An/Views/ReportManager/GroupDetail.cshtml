@@ -1,0 +1,1432 @@
+﻿@using Newtonsoft.Json
+@model CombinedViewModel
+@{
+    ViewData["Title"] = "GroupDetail";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+<style>
+    /* Overlay loading */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050; /* Đảm bảo trên tất cả */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+        /* Hiển thị overlay */
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    .bg-success {
+        background-color: #28a745 !important; /* Màu xanh thành công */
+        color: white !important;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important; /* Màu đỏ lỗi */
+        color: white !important;
+    }
+    /* Today’s color styling */
+    .calendar .today {
+        background-color: #90caf9; /* Lighter blue */
+        color: white;
+    }
+
+    /* Định dạng dấu chấm */
+    .status-dot {
+        display: inline-block;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    /* Định dạng dấu chấm */
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-left: 2px;
+        display: inline-block; /* Đảm bảo các dấu chấm nằm trên cùng một hàng */
+    }
+
+    .dot-rejected {
+        background-color: red;
+    }
+
+    .dot-approved {
+        background-color: green;
+    }
+
+    .dot-submitted {
+        background-color: #17a2b8;
+    }
+
+    .dot-pending {
+        background-color: orange;
+    }
+
+    .dot-other {
+        background-color: purple;
+    }
+
+    .cell {
+        position: relative;
+    }
+
+
+
+    /* Hover and pointer effect */
+    .calendar td {
+       
+        cursor: pointer;
+        padding:10px;
+        transition: background-color 0.2s ease;
+    }
+
+        .calendar td:hover {
+            background-color: #b1b3b6;
+        }
+
+    /* Modal Animation */
+    .modal.fade .modal-dialog {
+        transition: transform 0.3s ease-out;
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+
+    .modal.show .modal-dialog {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Month slide-in effect */
+    .calendar-table {
+        position: relative;
+        overflow: hidden;
+        height: 400px;
+        transition: transform 0.3s ease;
+    }
+
+    .calendar-body {
+        transition: transform 0.3s ease;
+    }
+
+    .slide-in-left {
+        transform: translateX(-100%);
+    }
+
+    .slide-in-right {
+        transform: translateX(100%);
+    }
+
+    /* Styling the calendar cells */
+    .calendar td {
+        padding: 20px;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 1.2rem;
+    }
+
+    .calendar th {
+        text-align: center;
+        font-size: 1.1rem;
+        background-color: #f7f7f7;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+
+
+
+
+
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Toast container positioned at the top-right -->
+        <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+                <div class="toast-header">
+                    <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                    <strong class="me-auto">Thông báo</strong>
+                    <small class="text-muted">Vừa xong</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                </div>
+                <div class="toast-body" id="toastMessage">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="container bg-light rounded mt-3 p-4 shadow-sm">
+    <!-- Header with class info -->
+    @if (Model.ProgressReportAndClassProject.ClassProject != null)
+{
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="text-primary fw-bold">
+                    @Model.ProgressReportAndClassProject.ClassProject.ClassName - Lớp: @Model.ProgressReportAndClassProject.ClassProject.SubjectCode
+            </h2>
+            <h4 class="text-secondary">
+                    Tên đề tài: @Model.ProgressReportAndClassProject.ClassProject.ProjectName - Nhóm: @Model.ProgressReportAndClassProject.ClassProject.GroupNumber
+            </h4>
+                <h6 class="text-secondary">
+                    Trưởng nhóm: @Model.ProgressReportAndClassProject.ClassProject.ProjectLeader
+                </h6>
+
+        </div>
+
+        <!-- Button for dropdown positioned at top-right -->
+     @*    <div>
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Danh mục
+                </button>
+                <ul class="dropdown-menu">
+                    <li><h5 class="dropdown-header">Nhiệm vụ</h5></li>
+                    <li><a class="dropdown-item" href="#" onclick="loadContent('ListTask')">Danh sách nhiệm vụ</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="loadContent('ListTaskRecived')">Danh sách nhiệm vụ đã nhận</a></li>
+                    <li><h5 class="dropdown-header">Tiến độ & Báo cáo</h5></li>
+                    <li><a class="dropdown-item" href="#" onclick="loadContent('Progress')">Tiến độ</a></li>
+                    @if (Context.Session.GetString("IsLeader") == "IsLeader")
+                    {
+                        <li><a class="dropdown-item" href="#" onclick="loadContent('Report')">Báo cáo tiến độ</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="loadContent('FinalReport')">Báo cáo hoàn thiện</a></li>
+                    }
+                </ul>
+            </div>
+            @if (Context.Session.GetString("IsLeader") == "IsLeader")
+            {
+                <a href="@Url.Action("CreateTaskView", "Groups", new { projectId = Model.ProjectId })" class="btn btn-success btn-lg ms-3">
+                    <i class="bi bi-plus"></i> Tạo nhiệm vụ mới
+                </a> 
+            }
+
+        </div> *@
+    </div>
+}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Thông tin báo cáo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Sửa ID để đồng bộ với tên gọi trong JavaScript -->
+                <p id="Number-of-reports"> </p> <!-- Số lượng báo cáo -->
+                <div id="reportDetails" class="mt-3"></div>  <!-- Hiển thị danh sách báo cáo -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    Xem được:
+    <span class="typed" data-typed-items="Tiến độ công việc của các thành viên,Lịch báo cáo hoạt động(tức là hiển thị các báo cáo trong ngày),Kế hoạch tiến độ"></span>
+    <span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
+</p>
+<!-- Tab Navigation -->
+<ul class="nav nav-pills mb-3 flex-nowrap overflow-auto" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="activity-report-tab" data-bs-toggle="tab" href="#activity-report" role="tab" aria-controls="activity-report" aria-selected="true">
+            <i class="bi bi-calendar-check"></i> Lịch báo cáo hoạt động
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="false">
+            <i class="bi bi-house-door"></i> Bảng tiến độ tổng thể
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="phase-tab" data-bs-toggle="tab" href="#phase" role="tab" aria-controls="phase" aria-selected="false">
+            <i class="bi bi-cogs"></i> So sánh tiến độ giai đoạn
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="member-tab" data-bs-toggle="tab" href="#member" role="tab" aria-controls="member" aria-selected="false">
+            <i class="bi bi-person"></i> Tiến độ công việc của các thành viên
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="chart-tab" data-bs-toggle="tab" href="#chart" role="tab" aria-controls="chart" aria-selected="false">
+            <i class="bi bi-journal-bookmark"></i> Tất cả các báo cáo của nhóm
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="group-tab" data-bs-toggle="tab" href="#group" role="tab" aria-controls="group" aria-selected="false">
+            <i class="bi bi-people"></i> Thống kê nhóm
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="project-plan-tab" data-bs-toggle="tab" href="#project-plan" role="tab" aria-controls="project-plan" aria-selected="false">
+            <i class="bi bi-calendar-event"></i> Kế hoạch tiến độ
+        </a>
+    </li>
+</ul>
+
+
+<!-- Nội dung chính -->
+<div class="tab-content" id="progressTabsContent">
+    <!-- Bảng tiến độ tổng thể -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+        <section class="mt-4">
+            <h5 class="text-center text-primary fw-bold mb-4 d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people-fill"></i> Bảng tiến độ tổng thể</span>
+                <button type="button" class="btn btn-info" data-bs-toggle="popover" title="Hướng dẫn sử dụng" data-bs-content="Đây là các chức năng có sẵn:
+                     2. **Bảng tiến độ tổng thể**: Hiển thị tổng thể các dữ liệu về dự án của nhóm.">
+                    <i class="bi bi-question-circle-fill"></i>
+                </button>
+            </h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Chỉ số</th>
+                        <th>Giá trị</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số nhiệm vụ đã tạo trong dự án">
+                        <td>Tổng số nhiệm vụ đã tạo</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TotalTasksCreated</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số nhiệm vụ đã được giao cho người dùng">
+                        <td>Tổng số nhiệm vụ đã nhận</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TotalTasksAssigned</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số công việc phụ được tạo cho từng nhiệm vụ">
+                        <td>Tổng số công việc phụ đã tạo</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TotalSubTasksCreated</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số báo cáo tiến độ đã được nộp">
+                        <td>Tổng số báo cáo tiến độ đã nộp</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TotalReportsSubmitted</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số báo cáo đã được phê duyệt và hoàn thiện">
+                        <td>Tổng số báo cáo hoàn thiện đã nộp</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TotalReportsCompleted</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số báo cáo bị từ chối vì không đạt yêu cầu">
+                        <td>Tổng số báo cáo bị từ chối</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TotalReportsFail</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tỷ lệ hoàn thành dựa trên số báo cáo hoàn thiện đã nộp so với tổng số báo cáo đã nộp">
+                        <td>Tỷ lệ hoàn thành</td>
+                        <td>@Model.ProjectProgress.GroupProgress.CompletionPercentage%</td>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tỷ lệ báo cáo hoàn thành so với tổng số báo cáo đã nộp.">
+                        <td>Tỷ lệ hoàn thành báo cáo</td>
+                        <td>@Model.ProjectProgress.GroupProgress.CompletionRate %</td>
+                    </tr>
+                    </tr>
+                    <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tỷ lệ nhiệm vụ đã có ít nhất một báo cáo hoàn thành so với tổng số nhiệm vụ đã tạo.">
+                        <td>Tỷ lệ hoàn thành nhiệm vụ</td>
+                        <td>@Model.ProjectProgress.GroupProgress.TaskCompletionRate %</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#explanationModal">
+                Xem giải thích chi tiết
+            </button>
+
+            <!-- Modal giải thích chi tiết -->
+            <div class="modal fade" id="explanationModal" tabindex="-1" aria-labelledby="explanationModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="explanationModalLabel">Giải thích về các chỉ số tiến độ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Tỷ lệ hoàn thành (Completion Rate):</h5>
+                            <p>Tỷ lệ hoàn thành được tính bằng công thức:</p>
+                            <pre>(Số báo cáo hoàn thiện đã nộp / Tổng số báo cáo đã nộp) * 100</pre>
+                            <p><strong>Ví dụ:</strong> Nếu bạn đã nộp 8 báo cáo và có 6 báo cáo được phê duyệt, tỷ lệ hoàn thành là (6 / 8) * 100 = 75%.</p>
+
+                            <h5>Tỷ lệ nhiệm vụ hoàn thành (Task Completion Rate):</h5>
+                            <p>Tỷ lệ nhiệm vụ hoàn thành được tính bằng công thức:</p>
+                            <pre>(Số nhiệm vụ hoàn thành / Tổng số nhiệm vụ đã tạo) * 100</pre>
+                            <p><strong>Ví dụ:</strong> Nếu có 5 nhiệm vụ, và 4 nhiệm vụ đã hoàn thành, tỷ lệ hoàn thành nhiệm vụ là (4 / 5) * 100 = 80%.</p>
+
+                            <h5>Tổng số báo cáo hoàn thiện:</h5>
+                            <p>Số báo cáo đã được phê duyệt và hoàn thiện, xác nhận rằng công việc đã hoàn thành đúng yêu cầu.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Lịch báo cáo hoạt động -->
+    <div class="tab-pane fade" id="activity-report" role="tabpanel" aria-labelledby="activity-report-tab">
+        <div class="container mt-4">
+            <h5 class="text-center text-primary fw-bold mb-4 d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people-fill"></i> Lịch báo cáo hoạt động của nhóm</span>
+                <button type="button" class="btn btn-info" data-bs-toggle="popover" title="Hướng dẫn sử dụng" data-bs-content="Đây là các chức năng có sẵn:
+            2. **Lịch báo cáo hoạt động**: Hiển thị tất cả các báo cáo đã được nộp trong ngày, giúp giảng viên theo dõi công việc và tiến độ của các nhóm hoặc thành viên.">
+                    <i class="bi bi-question-circle-fill"></i>
+                </button>
+            </h5>
+            <div class="container mt-5">
+                <button class="btn btn-outline-info mb-3" onclick="toggleCalendar()">Hiển thị lịch báo cáo hoạt động</button>
+                <div id="calendarContainer" class="calendar" style="display: none; opacity: 0; transition: opacity 0.5s ease;">
+
+
+                    <!-- Bọc lịch trong một div có id để điều khiển hiển thị -->
+
+                    <div class="d-flex justify-content-between align-items-center my-3">
+                        <button class="btn btn-secondary" onclick="goToToday()">Hôm nay</button>
+                        <div class="calendar-header text-center mx-auto" id="monthYear"></div>
+                        <div>
+                            <button class="btn btn-secondary me-2" onclick="prevMonth()">Lui lại</button>
+                            <button class="btn btn-secondary" onclick="nextMonth()">Tiếp</button>
+                        </div>
+                    </div>
+                    <div class="calendar-table">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>CN</th>
+                                    <th>T2</th>
+                                    <th>T3</th>
+                                    <th>T4</th>
+                                    <th>T5</th>
+                                    <th>T6</th>
+                                    <th>T7</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendarBody" class="calendar-body"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="calendar" id="calendarContainer" style="display: none; opacity: 0; transition: opacity 0.5s ease;">
+                <h2 class="text-center">Lịch báo cáo hoạt động của nhóm</h2>
+                <!-- Calendar content here -->
+            </div>
+        </div>
+    </div>
+    <!-- Biểu đồ tiến độ tổng thể -->
+
+    <div class="tab-pane fade" id="chart" role="tabpanel" aria-labelledby="chart-tab">
+        <section class="mt-4">
+            <div class="card" id="report-list">
+                <div class="card-body">
+                    <ul class="list-group" id="taskList">
+                        @if (Model.ProjectProgress.ProgressReportView != null && Model.ProjectProgress.ProgressReportView.Any())
+                        {
+                            @foreach (var report in Model.ProjectProgress.ProgressReportView)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="report-@report.TaskId">
+                                    <!-- Thông tin báo cáo -->
+                                    <div class="d-flex flex-column">
+                                        <strong>Báo cáo ngày:</strong><span>@report.ReportDate?.ToString("dd/MM/yyyy")</span>
+                                        
+                                        <div class="mt-2">
+                                            <span class="badge bg-success">File: @report.AttachedFilePath </span>
+                                            <span class="badge ms-2 report-status @(report.Status == "Đã từ chối" ? "bg-danger" : report.Status == "Đã phê duyệt" ? "bg-success" : "bg-warning")">
+                                                @report.Status
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Các nút hành động -->
+                                    <div class="btn-group" role="group" aria-label="Actions">
+                                        <!-- Nút Xem chi tiết -->
+                                        <button type="button"
+                                                class="btn btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#detailsReportModal-@report.ProgressReportId">
+                                            Xem chi tiết
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <!-- Modal Chi tiết -->
+                                <div class="modal fade"
+                                     id="detailsReportModal-@report.ProgressReportId"
+                                     tabindex="-1"
+                                     aria-labelledby="detailsReportModalLabel-@report.ProgressReportId"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="detailsReportModalLabel-@report.ProgressReportId">Chi tiết báo cáo</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5><strong>Báo cáo của:</strong> @report.ReporterName</h5>
+                                                <p><strong>Ngày báo cáo:</strong> <span>@report.ReportDate?.ToString("dd/MM/yyyy")</span></p>
+                                                <p><strong>Mô tả công việc:</strong> <span>@report.WorkDescription</span></p>
+                                                <p><strong>Tệp đính kèm:</strong> <span>@report.AttachedFilePath</span></p>
+                                                @if (!string.IsNullOrEmpty(report.AttachedFilePath))
+                                                {
+                                                    <a href="@report.AttachedFilePath" class="btn btn-primary" target="_blank">Tải xuống</a>
+                                                }
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>Không có báo cáo nào.</p>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- So sánh tiến độ giai đoạn -->
+    <div class="tab-pane fade" id="phase" role="tabpanel" aria-labelledby="phase-tab">
+        <section>
+            <h5 class="text-center text-primary fw-bold mb-4 d-flex justify-content-between align-items-center">
+                <i class="bi bi-bar-chart-fill"></i> So sánh tiến độ giai đoạn
+                <button type="button" class="btn btn-info" data-bs-toggle="popover" title="Hướng dẫn sử dụng" data-bs-content="Đây là các chức năng có sẵn:
+                     3. **So sánh tiến độ giai đoạn**: So sánh tiến độ thực tế của nhóm so với giai đoạn mà nhóm đã đề ra.">
+                    <i class="bi bi-question-circle-fill"></i>
+                </button>
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Tên giai đoạn</th>
+                            <th>Số ngày kế hoạch</th>
+                            <th>Tiến độ thực tế (%)</th>
+                            <th>Số ngày đã trôi qua</th>
+                            <th>Tổng số công việc</th>
+                            <th>Số công việc đã hoàn thành</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Lặp qua các giai đoạn từ mô hình -->
+                        @foreach (var phase in Model.ProjectProgress.PhaseComparison)
+                        {
+                            <tr>
+                                <td>@phase.StageName</td>
+                                <td class="text-center">@phase.PlannedDays</td>
+                                <td class="text-center">
+                                    <span class="fw-bold">@phase.ActualProgress%</span>
+                                </td>
+                                <td class="text-center">@phase.DaysElapsed</td>
+                                <td class="text-center">@phase.TotalSubTasks</td>
+                                <td class="text-center">@phase.CompletedSubTasks</td>
+                                <td class="text-center">
+                                    <span class="badge bg-@phase.Status">@phase.Status.ToUpper()</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- Tiến độ công việc của các thành viên -->
+    <div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab">
+        <section class="mt-5">
+            <h5 class="text-center text-primary fw-bold mb-4 d-flex justify-content-between align-items-center">
+                <i class="bi bi-bar-chart-fill"></i> Tiến độ công việc của các thành viên
+                <button type="button" class="btn btn-info" data-bs-toggle="popover" title="Hướng dẫn sử dụng" data-bs-content="Đây là các chức năng có sẵn:
+                     4. **Tiến độ công việc của các thành viên**: Thống kê tiến độ thực hiện công việc của các thành viên nhóm.">
+                    <i class="bi bi-question-circle-fill"></i>
+                </button>
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-success text-center">
+                        <tr>
+                            <th>Tên thành viên</th>
+                            <th>Số nhiệm vụ</th>
+                            <th>Tổng số công việc phụ</th>
+                            <th>Công việc phụ hoàn thành</th>
+                            <th>Phần trăm tiến độ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Lặp qua các thành viên từ mô hình -->
+                        @foreach (var item in Model.ProjectProgress.MemberProgress)
+                        {
+                            <tr>
+                                <td>@item.MemberName</td>
+                                <td class="text-center">@item.TotalTasks</td>
+                                <td class="text-center">@item.TotalSubTasks</td>
+                                <td class="text-center">@item.CompletedSubTasks</td>
+                                <td class="text-center">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: @item.ProgressPercentage%" aria-valuenow="@item.ProgressPercentage" aria-valuemin="0" aria-valuemax="100">
+                                            @item.ProgressPercentage%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="tab-pane fade" id="project-plan" role="tabpanel" aria-labelledby="project-plan-tab">
+        <div class="container mt-4">
+            <h5 class="text-center text-primary fw-bold mb-4 d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people-fill"></i> Kế hoạch tiến độ của nhóm</span>
+                <button type="button" class="btn btn-info" data-bs-toggle="popover" title="Hướng dẫn sử dụng" data-bs-content="Đây là các chức năng có sẵn:
+                         3. **Kế hoạch tiến độ**: Giúp giảng viên kiểm tra các kế hoạch tiến độ của các nhóm, theo dõi thời gian dự kiến hoàn thành các công việc, giúp quản lý và điều chỉnh công việc cho hợp lý.">
+                    <i class="bi bi-question-circle-fill"></i>
+                </button>
+            </h5>
+            <div id="progressContainer" class="mt-4">
+                <!-- Kế hoạch tiến độ -->
+            
+                    <!-- Thanh tiến độ -->
+                    <div class="progress mb-4 active">
+                    @foreach (var phase in Model.ProjectProgress.GetProjectPhases)
+                        {
+                            <div class="progress-bar text-dark fw-bold" role="progressbar"
+                                 style="width: @phase.Percentage%; background-color: @phase.BackgroundColor;"
+                                 aria-valuenow="@phase.Percentage"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                @phase.Percentage% (@phase.TotalDays ngày)
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Chú thích giai đoạn -->
+                    <div class="mt-3">
+                        <h6 class="fw-bold text-secondary">Chú thích các giai đoạn:</h6>
+                        <ul class="list-unstyled">
+                        @foreach (var phase in Model.ProjectProgress.GetProjectPhases)
+                            {
+                                <li class="mb-2">
+                                    <span class="badge"
+                                          style="background-color: @phase.BackgroundColor; width: 20px; height: 20px; display: inline-block; border-radius: 3px; margin-right: 10px;"></span>
+                                    <strong>@phase.StageName</strong>:
+                                    <span class="text-muted">Từ: @phase.StartDate.ToString("dd/MM/yyyy") - Đến: @phase.EndDate.ToString("dd/MM/yyyy")</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                
+             
+            </div>
+            <!-- Nội dung của tiến độ dự án -->
+            <!-- Thanh tiến độ và chú thích các giai đoạn -->
+        </div>
+    </div>
+    <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">
+        <h5 class="text-center text-primary fw-bold mb-4">
+            <i class="bi bi-people-fill"></i>Thống kê nhóm
+        </h5>
+        <h3>Nhiệm vụ có hạn nộp sắp đến hoặc đã trễ</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên nhiệm vụ</th>
+                    <th>Hạn nộp</th>
+                    <th>Trạng thái</th>
+                    <th>Số ngày còn lại</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.ProjectProgress.ProjectIssuesView.TasksWithDeadlineIssues)
+                {
+                    <tr>
+                        <td>@task.TaskName</td>
+                        <td>@task.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>@task.UpdatedStatus</td>
+                        @if (task.UpdatedStatus != "Đã hoàn thành")
+                        {
+                            <td>
+                                @if (task.DaysRemaining >= 1 && task.DaysRemaining <= 3)
+                                {
+                                    <span class="b" style="color: orange;">@task.DaysRemaining</span> <!-- Màu cam cho 1-3 ngày -->
+                                }
+                                else if (task.DaysRemaining < 1)
+                                {
+                                    <span class="b" style="color: red;">0</span> <!-- Màu đỏ cho quá hạn -->
+                                }
+                                else
+                                {
+                                    <span class="b" style="color: green;">@task.DaysRemaining</span> <!-- Màu xanh cho còn hạn -->
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>Đã hoàn thành</td>
+                        }
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Thành viên không cập nhật tiến độ định kỳ</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên thành viên</th>
+                    <th>Email</th>
+                    <th>Nhắc nhở</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.ProjectProgress.ProjectIssuesView.MembersNotUpdatingProgress)
+                {
+                    <tr>
+                        <td>@member.FullName</td>
+                        <td>@member.Email</td>
+                        <td>
+                            <button class="btn btn-warning send-reminder-btn"
+                                    data-email="@member.Email"
+                                    data-fullname="@member.FullName"
+                                    data-userid="@member.UserId">
+                                Gửi nhắc nhở
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        
+
+
+        <h3>Thành viên không nhận bất kỳ nhiệm vụ nào</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên thành viên</th>
+                    <th>Email</th>
+                    <th>Nhắc nhở</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.ProjectProgress.ProjectIssuesView.MembersWithoutTasks)
+                {
+                    <tr>
+                        <td>@member.FullName</td>
+                        <td>@member.Email</td>
+                        <td>
+                            <button class="btn btn-warning send-reminder-btn"
+                                    data-email="@member.Email"
+                                    data-fullname="@member.FullName"
+                                    data-userid="@member.UserId">
+                                Gửi nhắc nhở
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+    </div>
+</div>
+
+<!-- Bootstrap 5 -->
+<div class="chatbot chatbot--closed" id="chatbot" style="margin-bottom: 80px;margin-right: -74px;">
+    <div class="chatbot__header">
+        <i class="bi bi-x-circle" style="cursor: pointer; color:black; margin-left: 728px; padding: 14px;" id="chatbotCloseButton"></i> <!-- Icon close -->
+    </div>
+    <div class="chatbot__message-window">
+        <ul class="chatbot__messages">
+            <li class="is-ai animation">
+                <div class="is-ai__profile-picture">
+                    <svg class="icon-avatar" viewBox="0 0 32 32">
+                        <use xlink:href="#avatar" />
+                    </svg>
+                </div>
+                <span class="chatbot__arrow chatbot__arrow--left"></span>
+                <p class='chatbot__message'>Chào bạn 🖐. Tôi là Mít tơ chép, bạn có muốn tôi phân tích dữ liệu nhóm này không?</p>
+            </li>
+        </ul>
+    </div>
+    <div class="chatbot__entry">
+        <input type="text" id="chatbot__input" class="chatbot__input" placeholder="Write a message..."disabled />
+        <svg class="chatbot__submit" viewBox="0 0 32 32">
+            <use xlink:href="#icon-send" />
+        </svg>
+    </div>
+</div>
+
+
+<button class="chatbot-toggle" id="chatbotToggle"><i class="bi bi-chat-left-dots"></i></button>
+
+<svg>
+    <!-- Close icon -->
+    <symbol id="icon-close" viewBox="0 0 32 32">
+        <title>Close</title>
+        <path d="M2.624 8.297l2.963-2.963 23.704 23.704-2.963 2.963-23.704-23.704z" />
+        <path d="M2.624 29.037l23.704-23.704 2.963 2.963-23.704 23.704-2.963-2.963z" />
+    </symbol>
+
+    <!-- Speech icon -->
+    <symbol id="icon-speech" viewBox="0 0 32 32">
+        <title>Speech</title>
+        <path d="M21.795 5.333h-11.413c-0.038 0-0.077 0-0.114 0l-0.134 0.011v2.796c0.143-0.006 0.273-0.009 0.385-0.009h11.277c0.070 0 7.074 0.213 7.074 7.695 0 5.179-2.956 7.695-9.036 7.695h-3.792c-0.691 0-1.12 0.526-1.38 1.159l-1.387 3.093-1.625 3.77 0.245 0.453h2.56l2.538-5.678h2.837c7.633 0 11.84-3.727 11.84-10.494 0.001-8.564-7.313-10.492-9.875-10.492z" />
+        <path d="M10.912 24.259c-0.242-0.442-0.703-0.737-1.234-0.737-0 0-0 0-0 0h-0.56c-0.599-0.011-1.171-0.108-1.71-0.28l0.042 0.012c-1.82-0.559-4.427-2.26-4.427-7.424 0-6.683 5.024-7.597 7.109-7.686v-2.8c-2.042 0.095-9.91 1.067-9.91 10.483 0 4.832 1.961 7.367 3.606 8.64 1.38 1.067 3.109 1.744 4.991 1.843l0.033 0.019 2.805 5.211 1.41-3.273z" />
+    </symbol>
+
+    <!-- Send icon -->
+    <symbol id="icon-send" viewBox="0 0 23.97 21.9">
+        <title>Send</title>
+        <path d="M0.31,9.43a0.5,0.5,0,0,0,0,.93l8.3,3.23L23.15,0Z" />
+        <path d="M9,14.6H9V21.4a0.5,0.5,0,0,0,.93.25L13.22,16l6,3.32A0.5,0.5,0,0,0,20,19l4-18.4Z" />
+    </symbol>
+
+    <!-- Avatar icon -->
+    <symbol id="avatar" width="32" height="32" viewBox="0 0 44.25 44">
+        <title>Avatar</title>
+        <path style="fill: #7226e0; fill-rule: evenodd;" d="M1035.88,1696.25a22,22,0,1,1-22.13,22A22.065,22.065,0,0,1,1035.88,1696.25Z" transform="translate(-1013.75 -1696.25)" />
+        <path style="fill: #fff; fill-rule: evenodd;" d="M1030.18,1725.16h2.35a0.335,0.335,0,0,0,.34-0.33v-5.23h5.94v5.23a0.342,0.342,0,0,0,.34.33h2.36a0.342,0.342,0,0,0,.34-0.33v-12.36a0.34,0.34,0,0,0-.34-0.32h-2.36a0.34,0.34,0,0,0-.34.32v4.51h-5.94v-4.51a0.333,0.333,0,0,0-.34-0.32h-2.35a0.333,0.333,0,0,0-.34.32v12.36a0.335,0.335,0,0,0,.34.33" transform="translate(-1013.75 -1696.25)" />
+    </symbol>
+
+</svg>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+    $(document).on("click", ".send-reminder-btn", function () {
+        const email = $(this).data("email");
+        const fullName = $(this).data("fullname");
+        const userId = $(this).data("userid");
+        const overlay = document.getElementById("loadingOverlay");
+
+        // Hiển thị overlay
+        overlay.classList.add("show");
+
+        $.ajax({
+            url: '/ReportManager/SendReminderEmail',
+            type: 'POST',
+            data: { email: email, fullName: fullName, userId: userId },
+            success: function (response) {
+                updateToast('success', response);  // Hiển thị Toast thành công
+            },
+            error: function (xhr) {
+                updateToast('error', `Lỗi: ${xhr.responseText}`);  // Hiển thị Toast lỗi
+            },
+            complete: function () {
+                // Đảm bảo luôn ẩn overlay
+                overlay.classList.remove("show");
+            }
+        });
+    });
+
+    // Hàm hiển thị Toast
+    function updateToast(type, message) {
+        var toastEl = document.querySelector('.toast');
+        var toastBody = document.querySelector('#toastMessage');
+
+        // Cập nhật nội dung Toast
+        toastBody.textContent = message;
+
+        // Cập nhật class
+        toastEl.classList.remove('bg-success', 'bg-danger');
+        toastEl.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+
+        // Hiển thị Toast
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+
+
+    // Hàm hiển thị Toast
+    function updateToast(type, message) {
+        var toastEl = document.querySelector('.toast');
+        var toastBody = document.querySelector('#toastMessage');
+
+        // Cập nhật nội dung Toast
+        toastBody.textContent = message;
+
+        // Cập nhật class
+        toastEl.classList.remove('bg-success', 'bg-danger');
+        toastEl.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+
+        // Hiển thị Toast
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+
+</script>
+
+    <script>
+    // Kích hoạt popover khi trang đã tải xong
+    $(document).on("click", ".send-reminder-btn", function () {
+        const email = $(this).data("email");
+        const fullName = $(this).data("fullname");
+        const overlay = document.getElementById("loadingOverlay");
+
+        // Hiển thị overlay
+        overlay.classList.add("show");
+
+        $.ajax({
+            url: '/ReportManager/SendReminderEmail',
+            type: 'POST',
+            data: { email: email, fullName: fullName },
+            success: function (response) {
+                updateToast('success', response);
+            },
+            error: function (xhr) {
+                updateToast('error', `Lỗi: ${xhr.responseText}`);
+            },
+            complete: function () {
+                // Đảm bảo luôn ẩn overlay
+                overlay.classList.remove("show");
+            }
+        });
+    });
+
+    // Hàm hiển thị Toast
+    function updateToast(type, message) {
+        var toastEl = document.querySelector('.toast');
+        var toastBody = document.querySelector('#toastMessage');
+
+        // Cập nhật nội dung Toast
+        toastBody.textContent = message;
+
+        // Cập nhật class
+        toastEl.classList.remove('bg-success', 'bg-danger');
+        toastEl.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+
+        // Hiển thị Toast
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+
+
+
+    // Đảm bảo rằng tab được chuyển động mượt mà khi người dùng chọn
+    document.addEventListener('DOMContentLoaded', function () {
+        var tabs = new bootstrap.Tab(document.querySelectorAll('.nav-link'));
+    });
+
+        function toggleCalendar() {
+            const calendar = document.getElementById("calendarContainer");
+            if (calendar.style.display === "none" || calendar.style.opacity === "0") {
+                calendar.style.display = "block";
+                setTimeout(() => calendar.style.opacity = "1", 10); // Hiển thị với hiệu ứng
+            } else {
+                calendar.style.opacity = "0";
+                setTimeout(() => calendar.style.display = "none", 500); // Ẩn với hiệu ứng
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+        "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+
+    // Lấy danh sách ngày báo cáo từ Model và chuyển thành JSON để dùng trong JavaScript
+    const reportDates = @Html.Raw(Json.Serialize(Model.ProgressReportAndClassProject.ProgressReportDay));  // Ngày báo cáo
+    const reportTimes = @Html.Raw(Json.Serialize(Model.ProgressReportAndClassProject.ProgressReportTime)); // Giờ báo cáo
+    const reports = @Html.Raw(Json.Serialize(Model.ProgressReportAndClassProject.ProgressReport));         // Chi tiết báo cáo đầy đủ
+
+    function renderCalendar() {
+        const firstDay = new Date(currentYear, currentMonth).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const calendarBody = document.getElementById('calendarBody');
+        const monthYear = document.getElementById('monthYear');
+        calendarBody.innerHTML = "";
+        monthYear.innerText = `${monthNames[currentMonth]} ${currentYear}`;
+
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            let row = document.createElement("tr");
+
+            for (let j = 0; j < 7; j++) {
+                let cell = document.createElement("td");
+                if (i === 0 && j < firstDay) {
+                    cell.classList.add("bg-light");
+                } else if (date > daysInMonth) {
+                    cell.classList.add("bg-light");
+                } else {
+                    cell.innerText = date;
+
+                    const formattedDate = `${String(date).padStart(2, '0')}-${String(currentMonth + 1).padStart(2, '0')}-${currentYear}`;
+
+                    const reportsForDate = reportDates
+                        .map((reportDate, index) => {
+                            if (reportDate === formattedDate) {
+                                return {
+                                    time: reportTimes[index],
+                                    detail: reports[index]
+                                };
+                            }
+                            return null;
+                        })
+                        .filter(report => report !== null);
+
+                    if (reportsForDate.length > 0) {
+                        const reportInfo = document.createElement('div');
+                        reportInfo.classList.add("report-info");
+                        reportInfo.innerText = `${reportsForDate.length} báo cáo`;
+
+                        const tooltipContent = reportsForDate.map(report => {
+                            return `Trạng thái: ${report.detail.status} - Thời gian: ${report.time} - Người báo cáo: ${report.detail.userName}`;
+                        }).join("<br/>");
+
+                        cell.setAttribute("data-bs-toggle", "tooltip");
+                        cell.setAttribute("data-bs-html", "true");
+                        cell.setAttribute("title", tooltipContent);
+                        cell.setAttribute("data-reports", JSON.stringify(reportsForDate));
+                        // Hiển thị dấu chấm màu cho mỗi trạng thái
+                        reportsForDate.forEach(report => {
+                            const statusDot = document.createElement("span");
+                            statusDot.classList.add("status-dot");
+                            console.log("status:", report.detail.status);
+                            // Đặt màu tương ứng theo trạng thái
+                            switch (report.detail.status) {
+                                case "Đã từ chối":
+                                    statusDot.classList.add("dot-rejected");
+                                    break;
+                                case "Đã phê duyệt":
+                                    statusDot.classList.add("dot-approved");
+                                    break;
+                                case "Đã Nộp":
+                                    statusDot.classList.add("dot-submitted");
+                                    break;
+                                case "Đang chờ phê duyệt":
+                                    statusDot.classList.add("dot-pending");
+                                    break;
+                                default:
+                                    statusDot.classList.add("dot-other");
+                            }
+                            cell.appendChild(statusDot);
+                        });
+
+                        cell.appendChild(reportInfo);
+                    }
+                    cell.setAttribute("data-date", formattedDate);
+                    cell.addEventListener("click", showEventModal);
+
+                    if (date === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                        cell.classList.add("today");
+                    }
+                    date++;
+                }
+                row.appendChild(cell);
+            }
+            calendarBody.appendChild(row);
+        }
+
+         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+         const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+             return new bootstrap.Tooltip(tooltipTriggerEl);
+         });
+    }
+
+
+
+    function goToToday() {
+        today = new Date();
+        currentMonth = today.getMonth();
+        currentYear = today.getFullYear();
+        renderCalendar();
+    }
+
+    function nextMonth() {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        renderCalendar();
+    }
+
+    function prevMonth() {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        renderCalendar();
+    }
+    function showEventModal(event) {
+        const cell = event.currentTarget;
+        const reportsForDate = JSON.parse(cell.getAttribute("data-reports"));
+
+        const reportDetails = document.getElementById("reportDetails");
+        reportDetails.innerHTML = ""; // Xóa nội dung trước đó
+
+        reportsForDate.forEach(report => {
+            const reportItem = document.createElement("div");
+            reportItem.classList.add("report-item", "mb-2");
+
+            // Tạo các phần tử span cho thời gian và người báo cáo
+            const timeSpan = document.createElement("span");
+            timeSpan.classList.add("text-primary", "fw-bold"); // Màu xanh và chữ đậm
+            timeSpan.innerText = `Thời gian: ${report.time}`;
+
+            // Tạo phần tử span cho người báo cáo
+            const userSpan = document.createElement("span");
+            userSpan.classList.add("text-secondary", "ms-2"); // Màu phụ và thêm khoảng cách trái
+            userSpan.innerText = ` - Người báo cáo: ${report.detail.userName}`;
+
+            // Tạo phần tử span cho trạng thái và áp dụng màu sắc theo trạng thái
+            const statusSpan = document.createElement("span");
+            statusSpan.classList.add("ms-2", "fw-bold");
+
+            // Thêm màu sắc tùy theo trạng thái
+            switch (report.detail.status) {
+                case "Đã từ chối":
+                    statusSpan.classList.add("text-danger"); // Màu đỏ cho "Đã từ chối"
+                    statusSpan.innerText = ` - Trạng thái: Đã từ chối`;
+                    break;
+                case "Đã phê duyệt":
+                    statusSpan.classList.add("text-success"); // Màu xanh lá cho "Đã Phê Duyệt"
+                    statusSpan.innerText = ` - Trạng thái: Đã Phê Duyệt`;
+                    break;
+                case "Đã Nộp":
+                    statusSpan.classList.add("text-info"); // Màu xanh dương cho "Đã Nộp"
+                    statusSpan.innerText = ` - Trạng thái: Đã Nộp`;
+                    break;
+                case "Đang chờ phê duyệt":
+                    statusSpan.classList.add("text-warning"); // Màu vàng cho "Đang chờ phê duyệt"
+                    statusSpan.innerText = ` - Trạng thái: Đang chờ phê duyệt`;
+                    break;
+                default:
+                    statusSpan.classList.add("text-muted"); // Màu xám cho trạng thái mặc định
+                    statusSpan.innerText = ` - Trạng thái: Khác`;
+                    break;
+            }
+
+            // Thêm các phần tử span vào div
+            reportItem.appendChild(timeSpan);
+            reportItem.appendChild(userSpan);
+            reportItem.appendChild(statusSpan);
+
+            // Đưa reportItem vào reportDetails
+            reportDetails.appendChild(reportItem);
+        });
+
+
+        const numberOfReports = document.getElementById("Number-of-reports");
+        numberOfReports.innerText = `${reportsForDate.length} báo cáo cho ngày ${cell.getAttribute("data-date")}`;
+
+        const eventModal = new bootstrap.Modal(document.getElementById("eventModal"));
+        eventModal.show();
+    }
+
+
+
+
+    // Initial render
+    renderCalendar();
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+
+
+    <script>
+    let isChatbotOpenedOnce = false;  // Cờ để kiểm tra lần đầu tiên mở chatbot
+    // Lắng nghe sự kiện click vào biểu tượng đóng (x)
+    document.getElementById('chatbotCloseButton').addEventListener('click', function () {
+        const chatbot = document.getElementById('chatbot');
+        // Ẩn chatbot khi nhấn vào nút đóng
+        chatbot.classList.toggle('chatbot--closed');
+        chatbot.classList.toggle('chatbot--open');
+    });
+
+    document.getElementById('chatbotToggle').addEventListener('click', function () {
+        const chatbot = document.getElementById('chatbot');
+        chatbot.classList.toggle('chatbot--closed');
+        chatbot.classList.toggle('chatbot--open');
+
+        // Kiểm tra nếu chatbot được mở lần đầu tiên
+        if (!isChatbotOpenedOnce) {
+            isChatbotOpenedOnce = true; // Đánh dấu chatbot đã mở lần đầu tiên
+            showAnalysisButton();  // Hiển thị nút phân tích
+        }
+    });
+
+    let userAnswers = ""; // Biến lưu trữ chuỗi các câu trả lời
+    const $chatbot = document.querySelector('.chatbot');
+    const $chatbotMessageWindow = document.querySelector('.chatbot__message-window');
+    const $chatbotMessages = document.querySelector('.chatbot__messages');
+    const $chatbotInput = document.querySelector('.chatbot__input');
+    const $chatbotSubmit = document.querySelector('.chatbot__submit');
+
+    // Hàm hiển thị loader
+    const showLoader = () => {
+        const loadingMessage = `<li class='is-ai animation' id='is-loading'>
+            <div class="is-ai__profile-picture">
+                <svg class="icon-avatar" viewBox="0 0 32 32">
+                    <use xlink: href="#avatar" />
+                </svg>
+            </div>
+            <span class='chatbot__arrow chatbot__arrow--left'></span>
+            <div class='chatbot__message'>Đang xử lý...</div>
+        </li>`;
+        $chatbotMessages.innerHTML += loadingMessage;
+        scrollDown();
+    };
+
+    const removeLoader = () => {
+        let loadingElem = document.getElementById('is-loading');
+        if (loadingElem) $chatbotMessages.removeChild(loadingElem);
+    };
+    // Hàm xử lý khi gửi tin nhắn
+    const sendMessage = () => {
+        const userMessage = $chatbotInput.value.trim();
+        if (!userMessage) {
+            return; // Không gửi nếu người dùng không nhập gì
+        }
+
+        // Gửi tin nhắn của người dùng lên giao diện
+        userMessageToUI(userMessage);
+
+        // Xóa nội dung trường nhập liệu
+        $chatbotInput.value = '';
+        console.log('userMessage', userMessage);
+        // Gửi dữ liệu đến server
+        sendAnswersToServer(userMessage);
+    };
+
+    // Hàm để hiển thị tin nhắn của người dùng trên giao diện
+    const userMessageToUI = (message) => {
+        const $messagesList = document.querySelector('.chatbot__messages');
+        $chatbotMessages.innerHTML += `<li class='is-user animation'>
+              <p class='chatbot__message'>
+                    ${message}
+              </p>
+              <span class='chatbot__arrow chatbot__arrow--right'></span>
+            </li>`;
+        // $messagesList.insertAdjacentHTML('beforeend', userMessageHTML);
+        scrollDown(); // Cuộn xuống cuối màn hình
+    };
+
+    // Lắng nghe sự kiện click trên nút gửi
+    $chatbotSubmit.addEventListener('click', sendMessage);
+
+    // Lắng nghe sự kiện nhấn phím Enter trong trường nhập liệu
+    $chatbotInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    // Hàm hiển thị nút phân tích và gắn sự kiện click
+    const showAnalysisButton = () => {
+        const analysisMessage = `<li class="is-ai">
+            <div class="is-ai__profile-picture">
+                <svg class="icon-avatar" viewBox="0 0 32 32">
+                    <use xlink: href="#avatar" />
+                </svg>
+            </div>
+            <span class='chatbot__arrow chatbot__arrow--left'></span>
+            <div class='chatbot__message'>
+                <button class="btn btn-primary" style="color:black;" id="startAnalysis">Bắt đầu phân tích</button>
+            </div>
+        </li>`;
+        $chatbotMessages.innerHTML += analysisMessage;
+        scrollDown();
+
+        document.getElementById("startAnalysis").addEventListener('click', () => {
+            // Khi người dùng nhấn nút phân tích, thêm class active
+            const startAnalysisButton = document.getElementById("startAnalysis");
+            startAnalysisButton.classList.add("active"); // Thêm class active
+            startAnalysisButton.style.display = "none";
+            // Kiểm tra nếu người dùng nhấn nút phân tích
+            const isAnalysisButton = startAnalysisButton.classList.contains("active");
+
+            // Nếu là nút phân tích, gửi "Analysis", nếu không thì lấy dữ liệu từ input
+            let userAnswers = isAnalysisButton ? "Analysis" : document.getElementById("chatbot__input").value.trim();
+
+            console.log('userAnswers:', userAnswers);
+
+            if (!userAnswers) {
+                aiMessage("Câu trả lời không hợp lệ.");
+                return;
+            }
+
+            // Hiển thị câu trả lời của người dùng (nếu không phải "Analysis")
+            if (!isAnalysisButton) userMessage(userAnswers);
+
+            resetInputField(); // Làm sạch trường nhập liệu
+            scrollDown(); // Cuộn xuống cuối màn hình
+
+            // Hàm gửi dữ liệu tới server
+
+            // Chỉ gửi dữ liệu phân tích nếu đang nhấn nút phân tích
+            if (isAnalysisButton) {
+                sendAnswersToServer(userAnswers);
+            } else {
+                // Trường hợp người dùng gửi tin nhắn bình thường
+                sendAnswersToServer(userAnswers);
+            }
+        });
+
+    };
+    const sendAnswersToServer = async (answers) => {
+        const payload = { answers: answers }; // Bao gồm 'answers' trong payload
+        showLoader(); // Hiển thị loader
+        console.log('payload:', payload);
+       // startAnalysisButton.disabled = true;
+        $.ajax({
+            url: '/ReportManager/GenerateContent',
+            type: 'POST',
+            contentType: 'application/json', // Đảm bảo gửi dữ liệu dưới dạng JSON
+            data: JSON.stringify(payload), // Chuyển đổi payload thành JSON
+            success: function (response) {
+                if (response.success) {
+                    console.log('response:', response.response);
+                    setResponse(response.response || "Server đã nhận câu trả lời.");
+                    // Xóa nút phân tích nếu cần (hoặc chỉ thay đổi trạng thái nút)
+                   // startAnalysisButton.disabled = true;
+                    enableInputField();
+                } else {
+                    aiMessage("Có lỗi xảy ra: " + (response.response || "Câu trả lời không hợp lệ."));
+                  //  startAnalysisButton.disabled = false ;
+                }
+                removeLoader(); // Ẩn loader
+            },
+            error: function (xhr, status, error) {
+                console.error("Lỗi gửi dữ liệu đến server:", error);
+                aiMessage("Có lỗi xảy ra khi gửi câu trả lời. Vui lòng thử lại.");
+                removeLoader(); // Ẩn loader
+            }
+        });
+    };
+    const setResponse = (val, delay = 0) => {
+        console.log('setResponse:', val);
+        setTimeout(() => {
+            const responseHTML = processResponse(val);
+            if (responseHTML) {
+                aiMessage(responseHTML);
+            } else {
+                console.error('Không có dữ liệu để hiển thị.');
+            }
+        }, delay);
+    };
+
+    const processResponse = (val) => {
+        console.log("val:", val); // Log toàn bộ phản hồi từ server
+
+        let responseText = val;
+
+        console.log("responseText:", responseText); // Log chi tiết phần dữ liệu cần xử lý
+
+        // Khởi tạo markdown-it
+        const md = window.markdownit();
+
+        // Sử dụng markdown-it để chuyển đổi Markdown thành HTML
+        responseText = md.render(responseText);
+
+        // In ra để kiểm tra kết quả
+        console.log('responseText', responseText);
+
+        // Gói toàn bộ nội dung vào thẻ <div>
+        return `<div>${responseText}</div>`;
+    };
+
+
+
+
+
+
+
+
+
+
+    const aiMessage = (content, isLoading = false, delay = 0) => {
+        setTimeout(() => {
+            removeLoader();
+            let messageContent = content;
+            $chatbotMessages.innerHTML += `<li class='is-ai animation' id='${isLoading ? "is-loading" : ""}'>
+                <div class="is-ai__profile-picture">
+                    <svg class="icon-avatar" viewBox="0 0 32 32">
+                        <use xlink: href="#avatar" />
+                    </svg>
+                </div>
+                <span class='chatbot__arrow chatbot__arrow--left'></span>
+                <div class='chatbot__message'>${messageContent}</div>
+            </li>`;
+            scrollDown();
+        }, delay);
+    };
+
+    const scrollDown = () => {
+        const distanceToScroll = $chatbotMessageWindow.scrollHeight - (
+            $chatbotMessages.lastChild.offsetHeight + 60);
+        $chatbotMessageWindow.scrollTop = distanceToScroll;
+    };
+
+    const disableInputField = () => {
+        $chatbotInput.disabled = true;
+    };
+
+    const enableInputField = () => {
+        $chatbotInput.disabled = false;
+    };
+
+    const userMessage = content => {
+        $chatbotMessages.innerHTML += `<li class='is-user animation'>
+            <p class='chatbot__message'>${content}</p>
+            <span class='chatbot__arrow chatbot__arrow--right'></span>
+        </li>`;
+    };
+
+    const resetInputField = () => {
+        $chatbotInput.value = '';
+    };
+       
+    </script>
+

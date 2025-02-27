@@ -1,0 +1,267 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "MainLayout";
+}
+@model IEnumerable<ClassWithInstructorModel>
+@if (TempData["Message"] != null)
+{
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Toast container positioned at the top-right -->
+        <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+                <div class="toast-header">
+                    <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                    <strong class="me-auto">Thông báo</strong>
+                    <small class="text-muted">Vừa xong</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                </div>
+                <div class="toast-body">
+                     @TempData["Message"]                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to auto-show and hide toast after 3 seconds -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.querySelector('.toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+}
+    <button id="openModalButton" class="btn btn-success btn-lg" style="margin: 25px;float:right">
+        <i class="bi bi-plus"></i> Tạo không gian mới
+    </button>
+  
+
+<div class="container rounded bg-white mt-5 mb-5 d-flex justify-content-end">
+<table class="table table-dark table-hover">
+    <thead>
+        <tr>
+            <th>Mã lớp</th>
+            <th>Tên môn học</th>
+            <th>Mã môn học</th>
+            <th>Tên giảng viên</th>
+            <th>Email</th> <!-- Thêm cột cho các hành động -->
+            <th>Thao tác</th> <!-- Thêm cột cho các hành động -->
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+                int count = 1;
+                @foreach (var item in Model)
+            {
+                <tr data-id="@item.ClassId" class="clickable-row" style="cursor:pointer">
+                    <td>@count</td>
+                    <td>@item.ClassName</td>
+                    <td>@item.SubjectCode</td>
+                    <td>@item.InstructorFullName</td>
+                    <td>@item.InstructorEmail</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <!-- Nút đổi tên -->
+                                <form asp-action="RenameProject" asp-controller="ProjectManager" method="post" class="d-inline">
+                                    <button type="button" class="btn btn-warning btn-sm"
+                                     data-bs-toggle="modal"
+                                        data-bs-target="#updateClass"
+                                        onclick="setRenameModalValues('@item.ClassId', '@item.SubjectCode', '@item.ClassName')">
+                                     Đổi tên
+                                    </button>
+                                </form>
+                                <!-- Nút xóa -->
+                                    <input type="hidden" name="ClassId" value="@item.ClassId" />
+                                    <button type="button" class="btn btn-danger btn-sm" 
+                                     onclick="openDeleteModal('@item.ClassId', '@item.SubjectCode', '@item.ClassName')">
+                                        Xóa
+                                    </button>
+                            </div>
+                        </td>
+                    
+
+
+                </tr>
+                count++;
+            }
+        }
+    </tbody>
+</table>
+</div>
+<div>
+    <div class="modal fade" id="studentCodeModal" tabindex="-1" role="dialog" aria-labelledby="studentCodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studentCodeModalLabel">Tạo một không gian làm việc mới</h5>
+                </div>
+                <form enctype="multipart/form-data" id="studentCodeForm" method="post" >
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                                <label for="studentCodeInput">Tên lớp</label>
+                            <input type="text" class="form-control" id="namespace" name="nameSpace" maxlength="40" required>
+                            <div class="mb-3">
+                                <label for="subjectCode" class="form-label">Mã môn</label>
+                                <input type="text" class="form-control" id="subjectCode" name="subjectCode" maxlength="15" required />
+                            </div>
+                            <span id="Feedback" class="far fa-user" style="margin-top:7px"></span>
+                            <div class="mb-3">
+                                <label for="fileUpload" class="form-label">Chọn file danh sách lớp</label>
+                                <input type="file" class="form-control" id="fileClassList" name="fileClassList" accept=".xls, .xlsx" required/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button asp-action="CreateWorkSpace" asp-controller="WorkSpace" type="submit" class="btn btn-primary" id="create" disabled>Tạo mới</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@* <--Model đổi tên--> *@
+<div class="modal fade" id="updateClass" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="updateClassModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateClassModalLabel">Cập nhật thông tin lớp <strong id="displaySubjectCode"></strong> mã môn <strong id="displayNameSpace"></strong></h5>
+            </div>
+            <form asp-action="UpdateWorkSpace" asp-controller="WorkSpace" method="post" enctype="multipart/form-data" id="updateClassForm">
+                <div class="modal-body">
+                    <!-- Trường ẩn để lưu ClassId -->
+                    <input type="hidden" id="classId" name="ClassId" />
+
+                    <div class="form-group">
+                        <label for="namespace">Tên lớp</label>
+                        <input type="text" class="form-control" id="namespace" name="nameSpace" maxlength="40" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subjectCode" class="form-label">Mã môn</label>
+                        <input type="text" class="form-control" id="subjectCode" name="subjectCode" maxlength="15" required />
+                    </div>
+                    <span id="Feedback2" class="far fa-user" style="margin-top:7px"></span>
+                </div>
+                <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button id="saveChange" type="submit" class="btn btn-primary" disabled>Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@* Model xóa *@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa lớp</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Vui lòng nhập mã môn <strong id="displaySubjectCode2"></strong> để xác nhận xóa lớp này:</p>
+                <input type="text" class="form-control" id="confirmSubjectCode" placeholder="Nhập mã môn">
+                <span id="error-message" class="text-danger" style="display:none;">Mã môn không đúng.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form ẩn để gửi yêu cầu xóa -->
+<form id="deleteForm" method="post" asp-action="DeleteWorkSpace" asp-controller="WorkSpace" style="display:none;">
+    <input type="hidden" id="deleteClassId" name="ClassId">
+    <input type="hidden" id="deleteSubjectCode" name="subjectCode">
+    <input type="hidden" id="deleteNameSpace" name="nameSpace">
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.getElementById('openModalButton').addEventListener('click', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('studentCodeModal'));
+        myModal.show();
+    });
+document.addEventListener('DOMContentLoaded', () => {
+    // Tối ưu hóa mở modal
+    const openModalButton = document.getElementById('updateClass');
+    const updateClassModal = new bootstrap.Modal(document.getElementById('updateClass'));
+    const deleteClassModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+    if (updateClass) {
+        updateClass.addEventListener('click', () => {
+            updateClassModal.show();
+        });
+    }
+
+    // Cập nhật giá trị cho modal đổi tên
+    window.setRenameModalValues = (classId, subjectCode, className) => {
+        document.getElementById("classId").value = classId;
+        document.getElementById("namespace").value = className;
+        document.getElementById("subjectCode").value = subjectCode;
+        document.getElementById('displaySubjectCode').textContent = subjectCode;
+        document.getElementById('displayNameSpace').textContent = className;
+        updateClassModal.show();
+    };
+
+    // Mở modal xác nhận xóa với thông tin lớp
+    window.openDeleteModal = (classId, subjectCode, nameSpace) => {
+        
+        document.getElementById('deleteClassId').value = classId;
+        document.getElementById('deleteSubjectCode').value = subjectCode;
+        document.getElementById('deleteNameSpace').value = nameSpace;
+        document.getElementById('displaySubjectCode2').textContent = subjectCode;
+        deleteClassModal.show();
+    };
+
+    // Xác nhận mã môn khi xóa
+    window.confirmDelete = () => {
+        const enteredSubjectCode = document.getElementById('confirmSubjectCode').value;
+        const actualSubjectCode = document.getElementById('deleteSubjectCode').value;
+
+        if (enteredSubjectCode === actualSubjectCode) {
+            document.getElementById('deleteForm').submit();
+        } else {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    };
+
+    // Xử lý kiểm tra tính hợp lệ của tên và mã
+    $('#subjectCode, #namespace,#displaySubjectCode,#displaynamespace').on('input', function () {
+        const namespace = $(this).val().trim();
+        const isValid = /^[A-Za-z][A-Za-z0-9 ]*$/.test(namespace) && namespace.length >= 2;
+
+        if (isValid) {
+            $('#Feedback,#Feedback2').text('Tên và mã hợp lệ.').css('color', 'green');
+            $('#errorText').hide();
+            $('#create,#saveChange').prop('disabled', false);
+        } else {
+            $('#Feedback,#Feedback2').text('Tên và mã không hợp lệ.').css('color', 'red');
+            $('#errorText').show();
+            $('#create,#saveChange').prop('disabled', true);
+        }
+    });
+
+    // Xử lý sự kiện click cho các hàng bảng có class "clickable-row"
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+        row.addEventListener('click', (event) => {
+            // Kiểm tra nếu không phải nút hoặc liên kết
+            if (!event.target.closest('button') && !event.target.closest('a')) {
+                const classId = row.getAttribute('data-id');
+                if (classId) {
+                    window.location.href = `@Url.Action("Index", "Class")?ClassId=${classId}`;
+                }
+            }
+        });
+    });
+});
+
+</script>
+<script src="https://cdn.tailwindcss.com"></script>

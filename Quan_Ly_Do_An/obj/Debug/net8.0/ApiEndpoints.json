@@ -1,0 +1,18 @@
+[
+  {
+    "ContainingType": "Quan_Ly_Do_An.Controllers.ProgressPlanController",
+    "Method": "SavePlan",
+    "RelativePath": "api/ProgressPlan/SavePlan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "plan",
+        "Type": "Quan_Ly_Do_An.Models.ProjectPlanModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

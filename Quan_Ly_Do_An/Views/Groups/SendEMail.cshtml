@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewData["Title"] = "SendEMail";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+<style>
+    .email-form-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+        .email-form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+</style>
+
+@if (TempData["Message"] != null)
+{
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Toast container positioned at the top-right -->
+        <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+                <div class="toast-header">
+                    <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                    <strong class="me-auto">Thông báo</strong>
+                    <small class="text-muted">Vừa xong</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                </div>
+                <div class="toast-body">
+                    @TempData["Message"]
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to auto-show and hide toast after 3 seconds -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.querySelector('.toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+}
+<div class="email-form-container">
+    <h2>Gửi Email</h2>
+    <form asp-action="SendReminderEmail" asp-controller="Groups" method="post">
+        <select id="assignedUser" name="AssignedToUserId" class="form-control mb-3">
+            <option value="">Chọn người cần gửi</option>
+            @foreach (var task in ViewBag.member)
+            {
+                <option value="@task.UserId">@task.AssignedUserName</option>
+            }
+        </select>
+        <div class="form-group">
+            <label for="subject">Tiêu đề:</label>
+            <input type="text" id="subject" name="Subject" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="message">Nội dung:</label>
+            <textarea id="message" name="Message" class="form-control" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Gửi Email</button>
+    </form>
+</div>
+
+

@@ -1,0 +1,1245 @@
+﻿@using Quan_Ly_Do_An.Class
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+@model Task_And_ProgressReportModel
+
+<style>
+    .progress-bar {
+        transition: width 0.5s ease;
+    }
+        #taskList .form-control {
+        border-color: transparent;
+    }
+    #taskList .form-control:focus {
+        border-color: transparent;
+        box-shadow: none;
+    }
+    /* Thêm kiểu dáng cho các nút bị vô hiệu hóa */
+    button.disabled {
+        background-color: #e0e0e0; /* Màu nền nhạt cho nút vô hiệu hóa */
+        border-color: #bdbdbd; /* Màu viền nhạt */
+        color: #9e9e9e; /* Màu chữ nhạt */
+        cursor: not-allowed; /* Con trỏ chuột khi hover lên nút */
+    }
+    /* Thêm khoảng cách cho task-container và cải thiện font chữ */
+    .task-container {
+        padding: 20px;
+        background-color: #f8f9fa; /* Màu nền nhẹ cho task container */
+        border-radius: 10px; /* Bo tròn góc */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ để làm nổi bật */
+        margin-bottom: 20px; /* Khoảng cách dưới mỗi task container */
+    }
+
+        /* Tiêu đề "Tiến độ nhiệm vụ" */
+        .task-container p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333; /* Màu chữ tối */
+            margin-bottom: 10px;
+        }
+
+    /* Cải thiện thanh tiến độ */
+    .progress {
+        height: 30px;
+        background-color: #e9ecef; /* Màu nền thanh tiến độ */
+        border-radius: 5px; /* Bo tròn góc cho thanh tiến độ */
+    }
+
+    /* Cải thiện thanh tiến độ (progress-bar) */
+    .progress-bar {
+        height: 100%;
+        line-height: 30px; /* Căn giữa chữ trong thanh tiến độ */
+        text-align: center;
+        background-color: #28a745; /* Màu xanh lá cho thanh tiến độ */
+        color: white;
+        font-weight: bold;
+        border-radius: 5px; /* Bo tròn góc thanh tiến độ */
+        transition: width 0.5s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    }
+
+        /* Đổi màu thanh tiến độ theo trạng thái */
+        .progress-bar.bg-warning {
+            background-color: #ffc107; /* Màu vàng cho trạng thái chưa hoàn thành */
+        }
+
+        .progress-bar.bg-danger {
+            background-color: #dc3545; /* Màu đỏ cho trạng thái gặp sự cố */
+        }
+
+        .progress-bar.bg-info {
+            background-color: #17a2b8; /* Màu xanh lam cho trạng thái đang thực hiện */
+        }
+
+</style>
+
+@{
+    // Danh sách các định dạng tệp cho phép dựa trên SubmissionTypes
+    var allowedFileExtensions = new List<string>();
+
+    if (Model?.Task.SubmissionTypes != null)
+    {
+        foreach (var type in Model.Task.SubmissionTypes)
+        {
+            switch (type.ToLower())
+            {
+                case "file word":
+                    allowedFileExtensions.Add(".doc");
+                    allowedFileExtensions.Add(".docx");
+                    break;
+                case "file text":
+                    allowedFileExtensions.Add(".txt");
+                    break;
+                case "file pdf":
+                    allowedFileExtensions.Add(".pdf");
+                    break;
+                case "file excel":
+                    allowedFileExtensions.Add(".xls");
+                    allowedFileExtensions.Add(".xlsx");
+                    break;
+                case "file image":
+                    allowedFileExtensions.Add(".jpg");
+                    allowedFileExtensions.Add(".jpeg");
+                    allowedFileExtensions.Add(".png");
+                    allowedFileExtensions.Add(".gif");
+                    break;
+                case "file code":
+                    allowedFileExtensions.Add(".java");
+                    allowedFileExtensions.Add(".cs");
+                    allowedFileExtensions.Add(".py");
+                    break;
+                case "file database":
+                    allowedFileExtensions.Add(".sql");
+                    break;
+                case "file diagram":
+                    allowedFileExtensions.Add(".vsdx");
+                    allowedFileExtensions.Add(".vdx");
+                    allowedFileExtensions.Add(".png");
+                    break;
+                case "file powerpoint":
+                    allowedFileExtensions.Add(".ppt");
+                    allowedFileExtensions.Add(".pptx");
+                    break;
+                case "file compressed":
+                    allowedFileExtensions.Add(".zip");
+                    allowedFileExtensions.Add(".rar");
+                    break;
+                    // Thêm các loại tệp khác nếu cần
+            }
+        }
+    }
+
+    // Ghép các đuôi tệp thành chuỗi để sử dụng trong thuộc tính accept
+    var acceptFileTypes = string.Join(",", allowedFileExtensions);
+}
+@if (TempData["Message"] != null)
+{
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Toast container positioned at the top-right -->
+        <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+                <div class="toast-header">
+                    <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                    <strong class="me-auto">Thông báo</strong>
+                    <small class="text-muted">Vừa xong</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                </div>
+                <div class="toast-body" id="toastMessage">
+                    @TempData["Message"]
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.querySelector('.toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+}
+
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+            <div class="toast-header">
+                <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                <strong class="me-auto">Thông báo</strong>
+                <small class="text-muted">Vừa xong</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-5">
+    <div class="task-container" data-task-id="@Model.Task.TaskId">
+        <p>Tiến độ nhiệm vụ</p>
+        <div class="progress task-progress">
+            <div class="progress-bar"
+                 id="taskProgress-@Model.Task.TaskId"
+                 style="width: 0%;"
+                 aria-valuenow="0"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+                0%
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Danh sách các SubTask -->
+    <ul class="subtasks" data-subtasks='@Html.Raw(Json.Serialize(Model.SubTask))'>
+        @foreach (var subtask in Model.SubTask)
+        {
+        }
+    </ul>
+
+
+ @* <div class="progress mb-3">
+     <div id="progress-bar" class="progress-bar bg-success" role="progressbar"
+          style="width: @ViewData["ProgressPercentage"]%;"
+          aria-valuenow="@ViewData["ProgressPercentage"]" aria-valuemin="0" aria-valuemax="100">
+         @ViewData["ProgressPercentage"]%
+     </div>
+ </div> *@
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+     
+        <div>
+            
+            <h2 class="text-primary">@Model?.Task.ProjectName</h2>
+            <h4 class="text-secondary">@Model?.Task.TaskName</h4>
+        </div>
+        <div class="task-status-container mt-4 p-3 bg-light rounded shadow-sm">
+            <!-- Trạng thái nhiệm vụ -->
+            @if (TempData["Dismiss"] != null)
+            {
+                bool isPendingApproval = TempData["Dismiss"].Equals("true");
+                <p class="mb-3">
+                    <strong>Trạng thái: </strong>
+                    <span class="badge bg-success">Nhiệm vụ đã hoàn thiện (Bạn đã nộp file hoàn thiện)</span>
+                </p>
+            }
+            else
+            {
+                <p class="mb-3">
+                    <strong>Trạng thái: </strong>
+                    <span class="badge bg-warning text-dark">Nhiệm vụ đang thực hiện</span>
+                </p>
+            }
+
+            <!-- Khu vực nút hành động -->
+
+                <!-- Dòng 1: Nút nộp file -->
+            <div id="buttonContainer" class="d-grid gap-3 mb-3">
+                <button type="button"
+                        id="submitFinalFileButton"
+                        class="btn btn-success w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#submitFinalFileModal"
+                        style="display:none;" 
+                @(TempData["Dismiss"]?.Equals("true") == true ? "disabled" : "")>
+                    Nộp file hoàn thiện
+                </button>
+                <button type="button"
+                        id="progressPendingButton"
+                        class="btn btn-outline-secondary w-100"
+                        data-bs-toggle="popover"
+                        title="Thông báo"
+                        data-bs-content="Tiến độ chưa đạt 100%, không thể nộp file hoàn thiện"
+                        style="display:none;">
+                    Nộp file hoàn thiện
+                </button>
+            </div>
+
+
+                <!-- Dòng 2: Các nút khác -->
+                <div class="d-flex flex-wrap gap-3">
+                    <!-- Nút báo cáo tiến độ -->
+                <!-- Nút báo cáo tiến độ -->
+                <button type="button"
+                        class="btn btn-outline-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#progressReportModal"
+                @(TempData["Dismiss"]?.Equals("true") == true ? "disabled" : "")>
+                    Báo cáo tiến độ
+                </button>
+
+
+
+                    <!-- Nút xem chi tiết -->
+                    <button type="button"
+                            class="btn btn-outline-info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#detailsModal1">
+                        Xem chi tiết
+                    </button>
+
+                    <!-- Nút tạo công việc phụ -->
+                    <button type="button"
+                            class="btn btn-outline-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createSubTaskModal"
+                @(TempData["Dismiss"]?.Equals("true") == true ? "disabled" : "")>
+                        + Tạo công việc phụ
+                    </button>
+                </div>
+
+
+        </div>
+
+    </div>
+    </div>
+    <hr>
+<!-- Tab navigation -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="subtask-tab" data-bs-toggle="tab" href="#subtask" role="tab" aria-controls="subtask" aria-selected="true">Công việc phụ</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="report-tab" data-bs-toggle="tab" href="#report" role="tab" aria-controls="report" aria-selected="false">Báo cáo</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="subtask" role="tabpanel" aria-labelledby="subtask-tab">
+        <div class="container mt-4">
+            <h5>Danh sách công việc phụ</h5>
+            <div class="row">
+                <!-- Card Container -->
+                @foreach (var task in Model.SubTask)
+                {
+                    <div class="col-md-4 mb-4" data-task-id="@task.TaskId" data-status="@task.Status">
+                        <div class="card shadow-sm rounded">
+                            <!-- Card Header with Task Name -->
+                            <div class="card-header bg-primary text-white position-relative">
+                                <h5 class="card-title d-inline" id="subTaskNameDisplay-@task.SubTaskId">@task.SubTaskName</h5>
+                                <form method="post" asp-action="DateleSubTask" asp-controller="Work" id="deleteForm-@task.SubTaskId">
+                                    <input type="hidden" name="SubId" value="@task.SubTaskId" />
+                                    <button class="btn btn-link position-absolute top-0 end-0"
+                                            type="button"
+                                            onclick="confirmDeletion(@task.SubTaskId, '@task.SubTaskName')"
+                                    @(TempData["Dismiss"]?.Equals("true") == true ? "disabled" : "")>
+                                        <i class="bi bi-trash text-white"></i> <!-- Bootstrap Icon thùng rác -->
+                                    </button>
+                                </form>
+
+
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                @*   <p><strong>Mô tả:</strong><span class="badge bg-primary">@task.Description</span></p> *@
+                                <p><strong>Bắt đầu:</strong><span class="badge bg-primary">@task.StartDate</span></p>
+                                <p><strong>Kết thúc:</strong><span class="badge bg-danger" id="endDateDisplay-@task.SubTaskId">@task.EndDate</span></p>
+                                @if (task.Status.Equals("Đang chờ"))
+                                {
+                                    <p><strong>Trạng thái:</strong><span class="badge bg-secondary subtask-status-@task.SubTaskId">@task.Status</span></p>
+                                }
+                                else if (task.Status.Equals("Tạm hoãn"))
+                                {
+                                    <p><strong>Trạng thái:</strong><span class="badge bg-warning subtask-status-@task.SubTaskId">@task.Status</span></p>
+                                }
+                                else if (task.Status.Equals("Đang thực hiện"))
+                                {
+                                    <p><strong>Trạng thái:</strong><span class="badge bg-success subtask-status-@task.SubTaskId">@task.Status</span></p>
+                                }
+                                else
+                                {
+                                    <p><strong>Trạng thái:</strong><span class="badge bg-info subtask-status-@task.SubTaskId">@task.Status</span></p>
+                                }
+
+                            </div>
+
+                            <!-- Card Footer with Buttons -->
+                            <div id="subtask-footer-@task.SubTaskId" class="card-footer text-center">
+                            @if (task.Status.Equals("Đang chờ"))
+                            {
+                                <div class="d-flex justify-content-between">
+                                    <!-- Thực hiện Button -->
+                                    <button class="btn btn-info w-48 btn-update-subtask"
+                                            data-sub-id="@task.SubTaskId"
+                                            data-status="Đang thực hiện"
+                                            data-type="start"
+                                            data-subname="@task.SubTaskName">
+                                        Thực hiện
+                                    </button>
+                                    <!-- Chỉnh sửa Button -->
+                                    <button class="btn btn-info w-48"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#updateSubTaskModal-@task.SubTaskId"
+                                            title="Cập nhật nhiệm vụ"
+                                            data-sub-id="@task.SubTaskId">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </div>
+                            }
+                            else if (task.Status.Equals("Tạm hoãn"))
+                            {
+                                <div class="d-flex justify-content-between">
+                                    <!-- Tiếp tục Button -->
+                                    <button class="btn btn-warning w-48 btn-update-subtask"
+                                            data-sub-id="@task.SubTaskId"
+                                            data-status="Đang thực hiện"
+                                            data-type="continue"
+                                            data-subname="@task.SubTaskName">
+                                        Tiếp tục
+                                    </button>
+                                    <!-- Chỉnh sửa Button -->
+                                    <button class="btn btn-info w-48"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#updateSubTaskModal-@task.SubTaskId"
+                                            title="Cập nhật nhiệm vụ"
+                                            data-sub-id="@task.SubTaskId">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </div>
+                            }
+                            else if (task.Status.Equals("Đang thực hiện") || task.Status.Equals("Đang chỉnh sửa"))
+                            {
+                                <div class="d-flex justify-content-between">
+                                    <!-- Hoàn thành Button -->
+                                    <button class="btn btn-success w-48 btn-update-subtask"
+                                            data-sub-id="@task.SubTaskId"
+                                            data-status="Hoàn thành"
+                                            data-type="submit"
+                                            data-subname="@task.SubTaskName">
+                                        Hoàn thành
+                                    </button>
+                                    <!-- Tạm hoãn Button -->
+                                    <button class="btn btn-warning w-48 btn-update-subtask"
+                                            data-sub-id="@task.SubTaskId"
+                                            data-status="Tạm hoãn"
+                                            data-type="stop"
+                                            data-subname="@task.SubTaskName">
+                                        Tạm hoãn
+                                    </button>
+                                    <!-- Chỉnh sửa Button -->
+                                    <button class="btn btn-info w-48"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#updateSubTaskModal-@task.SubTaskId"
+                                            title="Cập nhật nhiệm vụ"
+                                            data-sub-id="@task.SubTaskId">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex justify-content-center">
+                                    <!-- Chỉnh sửa Button -->
+                                    <button class="btn btn-info w-100 btn-update-subtask"
+                                            data-sub-id="@task.SubTaskId"
+                                            data-status="Đang chỉnh sửa"
+                                            data-type="edit"
+                                            data-subname="@task.SubTaskName"
+                                            @(TempData["Dismiss"]?.Equals("true") == true ? "disabled" : "")>
+                                        Chỉnh sửa
+                                    </button>
+                                </div>
+                            }
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                    <!-- Modal for Editing SubTask -->
+                    <div class="modal fade" id="updateSubTaskModal-@task.SubTaskId" tabindex="-1" aria-labelledby="updateSubTaskModalLabel-@task.SubTaskId" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateSubTaskModalLabel-@task.SubTaskId">Chỉnh sửa công việc phụ</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tên công việc</label>
+                                        <input class="form-control"
+                                               type="text"
+                                               id="subTaskName-@task.SubTaskId"
+                                               value="@task.SubTaskName"
+                                               data-subtask-id="@task.SubTaskId"
+                                               required />
+
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Mô tả công việc</label>
+                                        <textarea class="form-control"
+                                                  data-subtask-id="@task.SubTaskId"
+                                                  rows="3"
+                                                  required>@task.Description</textarea>
+
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Ngày kết thúc</label>
+                                        <input type="datetime-local"
+                                               class="form-control date"
+                                               id="endDate-@task.SubTaskId"
+                                               value="@task.EndDate"
+                                               data-subtask-id="@task.SubTaskId"
+                                               min=""
+                                               required />
+
+                                        </div>
+                                        <input type="hidden" name="SubTaskIdEdit" value="@task.SubTaskId" /> <!-- Lưu ý rằng bạn cần truyền TaskId -->
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-primary btn-update-subtask" data-type="update">Cập nhật</button>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <!-- Modal for Submit SubTask -->
+                    <div class="modal fade" id="submitSubTaskModal-@task.SubTaskId" tabindex="-1" aria-labelledby="submitSubTaskModalLabel-@task.SubTaskId" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="submitSubTaskModalLabel-@task.SubTaskId">Nộp báo cáo cho công việc phụ</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" asp-action="UpdateSubTask" asp-controller="Work" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tên công việc</label>
+                                            <input class="form-control" type="text" name="SubTaskName" id="subTaskName-@task.SubTaskId" value="@task.SubTaskName" required />
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Mô tả công việc</label>
+                                            <textarea class="form-control" name="description" rows="3" required>@task.Description</textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Ngày hoàn thiện</label>
+                                            <input type="date" class="form-control" id="endDate-@task.SubTaskId" name="EndDate" value="@task.EndDate" />
+                                        </div>
+                                        <input type="hidden" name="SubTaskId" value="@task.SubTaskId" /> <!-- Lưu ý rằng bạn cần truyền TaskId -->
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            <button type="submit" class="btn btn-primary">Nộp</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+<!-- Modal for detailsReport -->
+    <div class="modal fade" id="detailsReportModal" tabindex="-1" aria-labelledby="detailsReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsReportModalLabel">Chi tiết báo cáo tiến độ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Ngày nộp:</strong> <span id="modal-report-date"></span></p>
+                    <p><strong>Người nộp:</strong> <span id="modal-submitter-name"></span></p>
+                    <p><strong>Mô tả:</strong> <span id="modal-description"></span></p>
+                    <p>
+                        <strong>Tệp đính kèm:</strong>
+                        <a id="modal-file-link" href="#" target="_blank">Tải xuống</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+        <h5>Danh sách báo cáo</h5>
+        <div class="card">
+            <div class="card-body">
+                <ul class="list-group" id="taskList">
+                    @if (Model == null)
+                    {
+                        <p>Chưa có báo cáo nào</p>
+                    }
+                    @foreach (var report in Model.Report) // Lặp qua danh sách báo cáo
+                    {
+                        @if (report.Status.Equals("Đang chờ phê duyệt"))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Báo cáo hoàn thiện ngày:</strong> @report.ReportDate
+                                    <br>
+                                    <span class="badge bg-success">File: @System.IO.Path.GetFileName(report.AttachedFilePath)</span>
+                                    <span class="badge bg-warning">Trạng thái: @report.Status</span>
+                                </div>
+                                <!-- Nút để hiển thị chi tiết báo cáo -->
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsReportModal"
+                                        data-report-date="@report.ReportDate" data-file="@report.AttachedFilePath" data-description="@report.WorkDescription">
+                                    Xem chi tiết
+                                </button>
+                            </li>
+                        }
+                        else if (report.Status.Equals("Đã phê duyệt"))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Báo cáo hoàn thiện ngày:</strong> @report.ReportDate
+                                    <br>
+                                    <span class="badge bg-success">File: @System.IO.Path.GetFileName(report.AttachedFilePath)</span>
+                                    <span class="badge bg-success">Trạng thái: @report.Status</span>
+                                </div>
+                                <!-- Nút để hiển thị chi tiết báo cáo -->
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsReportModal"
+                                        data-report-date="@report.ReportDate" data-file="@report.AttachedFilePath" data-description="@report.WorkDescription">
+                                    Xem chi tiết
+                                </button>
+                            </li>
+                        }
+                        else if (report.Status.Equals("Đã từ chối"))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Báo cáo hoàn thiện ngày:</strong> @report.ReportDate
+                                    <br>
+                                    <span class="badge bg-success">File: @System.IO.Path.GetFileName(report.AttachedFilePath)</span>
+                                    <span class="badge bg-danger">Trạng thái: @report.Status</span>
+                                </div>
+                                <!-- Nút để hiển thị chi tiết báo cáo -->
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsReportModal"
+                                        data-report-date="@report.ReportDate" data-file="@report.AttachedFilePath" data-description="@report.WorkDescription">
+                                    Xem chi tiết
+                                </button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Báo cáo tiến độ ngày:</strong> @report.ReportDate
+                                    <br>
+                                    <span class="badge bg-secondary">File: @System.IO.Path.GetFileName(report.AttachedFilePath)</span>
+                                </div>
+                                <!-- Nút để hiển thị chi tiết báo cáo -->
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsReportModal"
+                                        data-report-date="@report.ReportDate"
+                                        data-file="@report.AttachedFilePath"
+                                        data-description="@report.WorkDescription"
+                                        data-submitter-name="@report.ReporterName">
+                                    Xem chi tiết
+                                </button>
+
+                            </li>
+                        }
+
+
+                    }
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+   </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="detailsReportModal1" tabindex="-1" aria-labelledby="detailsReportModal1Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsReportModal1Label">Chi tiết báo cáo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Ngày báo cáo:</strong> <span id="reportDate"></span></p>
+                    <p><strong>Mô tả công việc:</strong> <span id="workDescription"></span></p>
+                    <p><strong>Tệp đính kèm:</strong> <span id="attachedFile"></span></p>
+                    <a href="" id="fileDownloadLink" class="btn btn-primary" target="_blank" style="display: none;">Tải xuống</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Modals for Task Details -->
+<div class="modal fade" id="detailsModal1" tabindex="-1" aria-labelledby="detailsModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel1">Chi tiết nhiệm vụ: @Model?.Task.TaskName</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Mô tả:</strong> @Model?.Task.Description</p>
+                <p><strong>Bắt đầu:</strong> <span class="badge bg-primary">@Model?.Task.StartDate</span></p>
+                <p><strong>Kết thúc:</strong> <span class="badge bg-danger">@Model?.Task.EndDate</span></p>
+                <p><strong>Trạng thái:</strong> <span class="badge bg-success">@Model?.Task.Status</span></p>
+                    <p>
+                        <strong>Loại tệp nộp:</strong>
+                        @if (Model?.Task.SubmissionTypes != null && Model.Task.SubmissionTypes.Any())
+                        {
+                            @foreach (var type in Model.Task.SubmissionTypes)
+                            {
+                                <span class="badge bg-info">@type</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Không có tệp</span>
+                        }
+                    </p>
+                <p><strong>Ghi chú thêm:</strong> @Model?.Task.Notes</p>
+                <p><strong>Ưu tiên:</strong> @Model?.Task.Priority</p>
+                @if (Model != null && !string.IsNullOrEmpty(Model.Task.AttachmentPath))
+                {
+                        <p><strong>Tệp đính kèm:</strong>  <a href="@Url.Content("~/" + @Model.Task.AttachmentPath)" target="_blank">Tải xuống tệp đính kèm</a></p>
+                }
+                else
+                {
+                    <p><strong>Tệp đính kèm:</strong> Không có file</p>
+                }
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modals for Sub Task  -->
+        <div class="modal fade" id="createSubTaskModal" tabindex="-1" aria-labelledby="createSubTaskModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                        <h5 class="modal-title" id="createSubTaskModalLabel">Tạo Công Việc Phụ Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <form method="post" asp-action="CreateNewSubTask" asp-controller="Work" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="workDescription" class="form-label">Tên công việc</label>
+                            <input class="form-control" type="text" name="SubTaskName" id="subTaskName" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="workDescription" class="form-label">Mô tả công việc</label>
+                            <textarea class="form-control" id="Description" name="description" rows="3" required></textarea>
+                    </div>
+                        <div class="mb-3">
+                                <label for="endDate" class="form-label">Ngày kết thúc</label>
+                            <input type="datetime-local" class="form-control date" id="endDate" name="EndDate" min="" />
+                        </div>
+                    <input type="hidden" name="TaskId" value="@Model.Task.TaskId" /> <!-- Lưu ý rằng bạn cần truyền TaskId -->
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary" id="submitButton" >Tạo</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modals for submit final file -->
+    <div class="modal fade" id="submitFinalFileModal" tabindex="-1" aria-labelledby="submitFinalFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitFinalFileModalLabel">Nộp file hoàn thiện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-action="CreateFinalFile" asp-controller="Work" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <p><strong>*Lưu ý:</strong>Sau khi nộp file này,trưởng nhóm của bạn sẽ xem xét và phê duyệt nó</p>
+                            <span class="badge bg-success">Trưởng nhóm phê duyệt:</span><p>Bạn chỉ có thể sửa lại file khi trưởng nhóm cho phép</p>
+                            <span class="badge bg-danger">Trưởng nhóm từ chối:</span><p>Bạn sẽ bị lưu lại lịch sử từ chối cùng với lý do từ chối của trưởng nhóm,<strong>Giảng viên của bạn sẽ biết điều này!</strong></p>
+                        </div>
+                        <div class="mb-3">
+                            <label for="workDescription" class="form-label">Mô tả sơ bộ các nội dung đã làm trong file</label>
+                            <textarea class="form-control" id="workDescription" name="WorkDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="attachedFile" class="form-label">Tệp đính kèm</label>
+                            <input type="file" class="form-control" id="attachedFileFinal" name="AttachedFile" accept="@acceptFileTypes" required/>
+                            <span id="error-message2" class="text-danger" style="display:none;">Dường như trưởng nhóm không cho phép bạn nộp loại file này. Vui lòng chọn lại hoặc liên hệ với trưởng nhóm.</span>
+
+                        </div>
+                        <input type="hidden" name="TaskId" value="@Model.Task.TaskId" /> <!-- Lưu ý rằng bạn cần truyền TaskId -->
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary" id="submitButton2">Gửi báo cáo</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Modals for submit progress report -->
+
+<div class="modal fade" id="progressReportModal" tabindex="-1" aria-labelledby="progressReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="progressReportModalLabel">Nộp báo cáo tiến độ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="CreateProgressReport" asp-controller="Work" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="workDescription" class="form-label">Mô tả sơ bộ các nội dung đã làm trong file</label>
+                        <textarea class="form-control" id="workDescription" name="WorkDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="attachedFile" class="form-label">Tệp đính kèm</label>
+                        <input type="file" class="form-control" id="attachedFileFinal" name="AttachedFile" accept="@acceptFileTypes" />
+                        <span id="error-message2" class="text-danger" style="display:none;">Dường như trưởng nhóm không cho phép bạn nộp loại file này. Vui lòng chọn lại hoặc liên hệ với trưởng nhóm.</span>
+                    </div>
+                    <input type="hidden" name="TaskId" value="@Model.Task.TaskId" />
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" id="submitButton2">Gửi báo cáo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    // Lấy thời gian hiện tại
+    var now = new Date();
+
+    // Định dạng thời gian theo kiểu "yyyy-mm-ddThh:mm"
+    var formattedDate = now.toISOString().slice(0, 16);
+
+    // Gán giá trị cho thuộc tính min của các phần tử có class "date"
+    document.querySelectorAll(".date").forEach(function (input) {
+        input.min = formattedDate;
+    });
+</script>
+    <script>
+    $(document).on("click", ".btn-update-subtask", function () {
+        const subId = $(this).data("sub-id");
+        const type = $(this).data("type");
+        const subname = $(this).data("subname");
+
+
+        // Modal chứa nút được bấm
+        const modal = $(this).closest('.modal');
+
+        // Lấy giá trị từ các trường trong modal
+       
+        const subTaskId = modal.find('input[name="SubTaskIdEdit"]').val(); // Lấy từ hidden input
+        const subTaskName = modal.find(`#subTaskName-${subTaskId}`).val(); // Lấy tên công việc
+        const description = modal.find(`textarea[data-subtask-id="${subTaskId}"]`).val(); // Lấy mô tả
+        const endDate = modal.find(`#endDate-${subTaskId}`).val();
+      
+        $.ajax({
+            type: "POST",
+            url: "/Work/UpdateSubTask",
+            data: { subId, type, subname, subTaskId, subTaskName, description, endDate },
+            success: function (response) {
+                if (response.success) {
+                    // Hiển thị thông báo thành công
+                    showToast(response.message, true);
+                    console.log("Full Response:", response);
+                    // Cập nhật giao diện tạm thời
+                    if (response.updatedSubTask) {
+                        $(`#subTaskNameDisplay-${subTaskId}`).text(response.updatedSubTask.subTaskName);
+                        $(`#descriptionDisplay-${subTaskId}`).text(response.updatedSubTask.description);
+                        $(`#endDateDisplay-${subTaskId}`).text(response.updatedSubTask.endDate);
+                        $(`#updateSubTaskModal-${subTaskId}`).modal('hide');
+                    } else {
+                        console.warn("Dữ liệu updatedSubTask không hợp lệ:", response.updatedSubTask);
+                    }
+                    if (response.dataTask) {
+                        try {
+                            // Chuyển đổi chuỗi JSON nếu cần
+                            const dataTask = JSON.parse(response.dataTask);
+                            console.log('dataTask', dataTask);
+                            console.log('response.Progress', response.progress);
+                            // Tìm công việc phụ (subtask) tương ứng với subId
+                            const subTask = dataTask.SubTask.find(sub => sub.SubTaskId === subId);
+                            if (subTask) {
+                                console.log('subTask', subTask);
+                                // Cập nhật trạng thái subtask trên giao diện
+                                const statusBadge = $(`.subtask-status-${subId}`);
+                                statusBadge.text(subTask.Status);
+                                statusBadge
+                                    .removeClass("bg-secondary bg-warning bg-success bg-info")
+                                    .addClass(getStatusBadgeClass(subTask.Status));
+
+                                // Cập nhật nút hành động tương ứng
+                                const footer = $(`#subtask-footer-${subId}`);
+                                footer.html(generateButtons(subTask.Status, subId, subname));
+                                updateTaskProgress(subTask.TaskId, response.progress);
+                                // Kiểm tra nếu tiến độ đạt 100% và hiển thị nút nộp file
+                                const submitButton = document.getElementById('submitFinalFileButton');
+                                const pendingButton = document.getElementById('progressPendingButton');
+
+                                // Nếu tiến độ 100%, hiển thị nút nộp file
+                                if (response.progress === 100) {
+                                    submitButton.style.display = 'inline-block';
+                                    pendingButton.style.display = 'none';
+                                } else {
+                                    submitButton.style.display = 'none';
+                                    pendingButton.style.display = 'inline-block';
+                                }
+                            } else {
+                                console.warn("Không tìm thấy công việc phụ với SubTaskId:", subId);
+                            }
+                        } catch (err) {
+                            console.error("Lỗi xử lý JSON: ", err);
+                        }
+                    }
+                } else {
+                    // Hiển thị thông báo lỗi
+                    showToast(response.message, false);
+                }
+            },
+            error: function () {
+                showToast("Đã xảy ra lỗi khi gửi yêu cầu.", false);
+            },
+        });
+    });
+    function updateTaskProgress(taskId, progressPercentage) {
+        // Đảm bảo giá trị tiến độ hợp lệ
+        const progress = progressPercentage || 0;
+
+        // Cập nhật giá trị của thanh tiến độ
+        const progressBar = $(`#taskProgress-${taskId}`);
+
+        // Cập nhật chiều rộng của thanh tiến độ
+        progressBar.css("width", `${progress}%`);
+
+        // Cập nhật giá trị trong thanh tiến độ
+        progressBar.attr("aria-valuenow", progress);
+        progressBar.text(`${progress}%`);
+    }
+    // Hàm trả về class CSS tương ứng với trạng thái
+    function getStatusBadgeClass(status) {
+        switch (status) {
+            case "Đang chờ":
+                return "bg-secondary";
+            case "Tạm hoãn":
+                return "bg-warning";
+            case "Đang thực hiện":
+                return "bg-success";
+            case "Hoàn thành":
+                return "bg-info";
+            case "Đang chỉnh sửa":
+                return "bg-primary";
+            default:
+                return "bg-dark";
+        }
+    }
+
+    // Hàm tạo nút hành động theo trạng thái mới
+    function generateButtons(status, subId, subname) {
+        switch (status) {
+            case "Đang chờ":
+                return `
+                    <!-- Thực hiện Button -->
+                    <button class="btn btn-info w-100 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-status="Đang thực hiện"
+                            data-type="start"
+                            data-subname="${subname}">
+                        Thực hiện
+                    </button>
+                    <!-- Chỉnh sửa Button -->
+                    <button class="btn btn-info w-48"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateSubTaskModal-${subId}"
+                            title="Chỉnh sửa nhiệm vụ"
+                            data-sub-id="${subId}">
+                            <i class="bi bi-pencil-square"></i>
+                    </button>`;
+            case "Tạm hoãn":
+                return `
+                    <!-- Tiếp tục Button -->
+                    <button class="btn btn-warning w-30 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-status="Đang thực hiện"
+                            data-type="continue"
+                            data-subname="${subname}">
+                        Tiếp tục
+                    </button>
+                    <!-- Chỉnh sửa Button -->
+                    <button class="btn btn-info w-30"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateSubTaskModal-${subId}"
+                            title="Chỉnh sửa nhiệm vụ"
+                            data-sub-id="${subId}">
+                            <i class="bi bi-pencil-square"></i>
+                    </button>`;
+            case "Đang thực hiện":
+                return `
+                    <!-- Hoàn thành Button -->
+                    <button class="btn btn-success w-30 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-status="Hoàn thành"
+                            data-type="submit"
+                            data-subname="${subname}">
+                        Hoàn thành
+                    </button>
+                    <!-- Tạm hoãn Button -->
+                    <button class="btn btn-warning w-30 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-status="Tạm hoãn"
+                            data-type="stop"
+                            data-subname="${subname}">
+                        Tạm hoãn
+                    </button>
+                    <!-- Chỉnh sửa Button -->
+                    <button class="btn btn-info w-30"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateSubTaskModal-${subId}"
+                            title="Chỉnh sửa nhiệm vụ"
+                            data-sub-id="${subId}">
+                            <i class="bi bi-pencil-square"></i>
+                    </button>`;
+            case "Hoàn thành":
+                return `
+                    <button class="btn btn-info w-100 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-type="edit"
+                            data-subname="${subname}">
+                        Chỉnh sửa
+                    </button>`;
+            case "Đang chỉnh sửa":
+                return `
+                    <!-- Hoàn thành Button -->
+                    <button class="btn btn-success w-30 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-status="Hoàn thành"
+                            data-type="submit"
+                            data-subname="${subname}">
+                        Hoàn thành
+                    </button>
+                    <!-- Tạm hoãn Button -->
+                    <button class="btn btn-warning w-30 btn-update-subtask"
+                            data-sub-id="${subId}"
+                            data-status="Tạm hoãn"
+                            data-type="stop"
+                            data-subname="${subname}">
+                        Tạm hoãn
+                    </button>
+                    <!-- Chỉnh sửa Button -->
+                    <button class="btn btn-info w-30"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateSubTaskModal-${subId}"
+                            title="Chỉnh sửa nhiệm vụ"
+                            data-sub-id="${subId}">
+                            <i class="bi bi-pencil-square"></i>
+                    </button>`;
+            default:
+                return "";
+        }
+    }
+
+
+
+    // Hàm hiển thị thông báo toast
+    function showToast(message, isSuccess) {
+        const toastMessage = document.getElementById("toastMessage");
+        toastMessage.textContent = message;
+        toastMessage.style.color = isSuccess ? 'green' : 'red';
+        const toast = new bootstrap.Toast(document.querySelector('.toast'));
+        toast.show();
+    }
+
+
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const progressBar = document.getElementById('taskProgress-@Model.Task.TaskId');
+            const submitButton = document.getElementById('submitFinalFileButton');
+            const pendingButton = document.getElementById('progressPendingButton');
+            // Lấy giá trị tiến độ từ thanh tiến độ
+            const progressValue = parseInt(progressBar.getAttribute('aria-valuenow'));
+
+            // Kiểm tra nếu tiến độ đạt 100%
+            if (progressValue === 100) {
+                submitButton.style.display = 'inline-block'; // Hiển thị nút nộp file
+                pendingButton.style.display = 'none';       // Ẩn nút không khả dụng
+            } else {
+                submitButton.style.display = 'none';        // Ẩn nút nộp file
+                pendingButton.style.display = 'inline-block'; // Hiển thị nút không khả dụng
+            }
+
+            // Kích hoạt Bootstrap Popover
+            const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+            popoverTriggerList.map(function (popoverTriggerEl) {
+                return new bootstrap.Popover(popoverTriggerEl);
+            });
+        });
+
+
+
+        // Gán sự kiện khi modal được mở
+        const reportModal = document.getElementById('detailsReportModal');
+        reportModal.addEventListener('show.bs.modal', function (event) {
+            // Nút kích hoạt modal
+            const button = event.relatedTarget;
+
+            // Lấy dữ liệu từ các thuộc tính data-*
+            const reportDate = button.getAttribute('data-report-date');
+            const filePath = button.getAttribute('data-file');
+            const description = button.getAttribute('data-description');
+            const submitterName = button.getAttribute('data-submitter-name');
+
+            // Cập nhật nội dung trong modal
+            document.getElementById('modal-report-date').textContent = reportDate || 'Không xác định';
+            document.getElementById('modal-submitter-name').textContent = submitterName || 'Không xác định';
+            document.getElementById('modal-description').textContent = description || 'Không có mô tả';
+
+            const fileLink = document.getElementById('modal-file-link');
+            if (filePath) {
+                fileLink.href = filePath;
+                fileLink.textContent = "Tải xuống";
+            } else {
+                fileLink.href = "#";
+                fileLink.textContent = "Không có tệp đính kèm";
+            }
+        });
+        const validFileExtensions = @Html.Raw(Json.Serialize(allowedFileExtensions));
+        $(document).ready(function () {
+
+            console.log("Document is ready.");
+
+            // Cập nhật tiến độ cho tất cả các task-container
+            $('.task-container').each(function () {
+                const $taskContainer = $(this);
+                const taskId = $taskContainer.data('task-id');
+                if (taskId) {
+                    updateProgress(taskId);
+                } else {
+                    console.warn("Task ID not found for task container.");
+                }
+            });
+
+            // Thêm sự kiện kiểm tra file
+            // setupFileValidation("#attachedFileReport", "#submitButton", "#error-message");
+            // setupFileValidation("#attachedFileFinal", "#submitButton2", "#error-message2");
+
+            // Cài đặt modal chi tiết báo cáo
+            setupReportModal("detailsReportModal1");
+        });
+
+        // Hàm cập nhật tiến độ
+        async function updateProgress(taskId) {
+            try {
+                const response = await $.get(`/Work/GetTaskProgress?taskId=${taskId}`);
+                if (response && response.progressPercentage !== undefined) {
+                    const progressBar = $(`#taskProgress-${taskId}`);
+                    if (progressBar.length > 0) {
+                        // Cập nhật thanh tiến độ
+                        progressBar.css('width', `${response.progressPercentage}%`);
+                        progressBar.attr('aria-valuenow', response.progressPercentage);
+                        progressBar.text(`${response.progressPercentage}%`);
+                        console.log(`Progress for Task ${taskId} updated to ${response.progressPercentage}%.`);
+                    // Cập nhật trạng thái nút
+                    if (response.progressPercentage === 100) {
+                        $(`#submitFinalFileButton`).show();
+                        $(`#progressPendingButton`).hide();
+                    } else {
+                        $(`#submitFinalFileButton`).hide();
+                        $(`#progressPendingButton`).show();
+                    }
+                    } else {
+                        console.warn(`Progress bar for task ${taskId} not found.`);
+                    }
+                } else {
+                    console.warn(`Invalid response for task ${taskId}:`, response);
+                }
+            } catch (error) {
+                console.error(`Failed to update progress for Task ${taskId}:`, error);
+                alert('Không thể cập nhật tiến độ. Vui lòng thử lại sau!');
+            }
+        }
+
+        // Hàm thiết lập kiểm tra file hợp lệ
+        // function setupFileValidation(fileInputSelector, submitButtonSelector, errorMessageSelector) {
+        //     const fileInput = document.querySelector(fileInputSelector);
+        //     const submitButton = document.querySelector(submitButtonSelector);
+        //     const errorMessage = document.querySelector(errorMessageSelector);
+
+        //     if (!fileInput || !submitButton || !errorMessage) {
+        //         console.error(`One or more elements not found:
+        //                 fileInput=${fileInput}, submitButton=${submitButton}, errorMessage=${errorMessage}`);
+        //         return;
+        //     }
+
+        //     console.log("Setting up file validation for:", fileInputSelector);
+
+        //     Sử dụng danh sách loại tệp hợp lệ từ server
+        //     fileInput.addEventListener("change", function () {
+        //         console.log("File input changed.");
+        //         const file = fileInput.files[0];
+        //         if (file) {
+        //             const fileExtension = "." + file.name.split('.').pop().toLowerCase();
+        //             console.log("File extension:", fileExtension);
+        //             if (validFileExtensions.includes(fileExtension)) {
+        //                 console.log("Valid file type.");
+        //                 submitButton.disabled = false;
+        //                 errorMessage.style.display = "none";
+        //             } else {
+        //                 console.log("Invalid file type.");
+        //                 submitButton.disabled = true;
+        //                 errorMessage.style.display = "block";
+        //             }
+        //         } else {
+        //             console.log("No file selected.");
+        //             submitButton.disabled = true;
+        //             errorMessage.style.display = "none";
+        //         }
+        //     });
+        // }
+
+        // Hàm xác nhận xóa
+        function confirmDeletion(subTaskId, subTaskName) {
+            Swal.fire({
+                title: `Bạn có chắc chắn muốn xóa?`,
+                text: `Công việc phụ: ${subTaskName}`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.getElementById(`deleteForm-${subTaskId}`);
+                    if (form) {
+                        form.submit();
+                    } else {
+                        console.error(`Delete form for subTask ${subTaskId} not found.`);
+                    }
+                }
+            });
+        }
+    </script>
+
+
+

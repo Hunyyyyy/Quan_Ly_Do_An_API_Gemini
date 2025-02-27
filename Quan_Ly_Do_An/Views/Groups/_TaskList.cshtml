@@ -1,0 +1,585 @@
+﻿@using Quan_Ly_Do_An.Class
+
+    @model List<TaskModel>
+
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-10px); /* Di chuyển lên trên khi hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng mờ */
+        }
+
+    .no-results-message {
+        padding: 10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    /* Overlay loading */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050; /* Đảm bảo trên tất cả */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+        /* Hiển thị overlay */
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+
+</style>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only"></span>
+    </div>
+</div>
+
+<div class="container mt-4">
+
+       <div class="row" id="taskCardsContainer">
+        <!-- Card Container -->
+        @foreach (var task in Model)
+        {
+            <div class="col-md-4 mb-4 task-card" id="task-card-@task.TaskId" data-task-id="@task.TaskId" data-status="@task.Status" data-assigned-user="@task.AssignedUserName" data-priority="@task.Priority" data-start-date="@task.StartDate" data-end-date="@task.EndDate">
+                @{
+                    // Tính toán số ngày tổng cộng và số ngày còn lại
+                    var totalDays = (task.EndDate - task.StartDate)?.TotalDays; // Tổng số ngày
+                    var remainingDays = (task.EndDate - DateTime.Now)?.TotalDays; // Số ngày còn lại
+                }
+                <div class="card shadow-sm rounded">
+                    <!-- Card Header -->
+                    <div class="card-header bg-primary text-white">
+
+                        @if (task.Status != "Hoàn thành")
+                        {
+                            <button class="btn btn-link position-absolute top-0 end-0"
+                            data-id="@task.TaskId"
+                                    type="button"
+                                onclick="confirmDeleteTask(@task.TaskId)">
+                                <i class="bi bi-trash text-white"></i> <!-- Bootstrap Icon thùng rác -->
+                            </button>
+                        }
+                        @if (totalDays.HasValue && remainingDays.HasValue)
+                        {
+                            if (remainingDays.Value > 0 && remainingDays.Value <= totalDays.Value / 3)
+                            {
+                                // Sắp hết hạn
+                                if (task.Status != "Hoàn thành")
+                                {
+                                    <span class="badge bg-warning">Sắp hết hạn</span>
+                                }
+                            }
+                            else if (remainingDays.Value <= 0)
+                            {
+                                // Đã hết hạn
+                                if (task.Status != "Hoàn thành")
+                                {
+                                    <span class="badge bg-danger">Đã hết hạn</span>
+                                }
+                            }
+                        }
+
+                        <h5 class="card-title">@task.TaskName</h5>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <p><strong>Bắt đầu:</strong> <span class="badge bg-primary">@task.StartDate</span></p>
+                        <p><strong>Kết thúc:</strong> <span class="badge bg-danger">@task.EndDate</span></p>
+                        <p><strong>Trạng thái:</strong> <span class="badge bg-success badge-status">@task.Status</span></p>
+                        <p><strong>Người thực hiện:</strong> <span class="badge bg-success assigned-user-name">@task.AssignedUserName</span></p>
+                        <p><strong>Ưu tiên:</strong> @task.Priority</p>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="card-footer text-center">
+                        @if (task.Status.Equals("Đang chờ") )
+                        {
+         
+                            @if (task.AssignedToUserId == Context.Session.GetInt32("UserId"))
+                            {
+                                <!-- Nút Nhận Nhiệm Vụ -->
+                                <button class="btn btn-success w-100 my-2" data-bs-toggle="modal" data-bs-target="#acceptTaskModal-@task.TaskId" @(remainingDays.Value <= totalDays.Value / 3 || remainingDays.Value <= 0 ? "disabled" : "")>Nhận nhiệm vụ</button>
+
+                            
+                           
+                            <!-- Nút Hủy nhiệm vụ -->
+                            <button type="button"
+                                    class="btn btn-danger w-50 my-2"
+                                    data-dis="#acceptTaskModal-@task.TaskId"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmCancelModal"
+                                    onclick="confirmCancelTask(@task.TaskId)"
+                            @(remainingDays.Value <= totalDays.Value / 3 || remainingDays.Value <= 0 ? "disabled" : "")>
+                                Hủy nhiệm vụ
+                            </button>
+                            }
+                            <!-- Nút Chỉnh sửa chỉ hiển thị nếu là trưởng nhóm -->
+                            @if (Context.Session.GetString("leader")?.Equals("IsLeader") == true)
+                            {
+                                <button class="btn btn-info w-48" data-bs-toggle="modal" data-bs-target="#updateTaskModal-@task.TaskId">Chỉnh sửa</button>
+                            }
+                        }
+                        else if (task.Status.Equals("Đang thực hiện"))
+                        {
+                         
+
+                            <!-- Nút Chỉnh sửa chỉ hiển thị nếu là trưởng nhóm -->
+                            @if (Context.Session.GetString("leader")?.Equals("IsLeader") == true)
+                            {
+                                <button class="btn btn-info w-48" data-bs-toggle="modal" data-bs-target="#updateTaskModal-@task.TaskId">Chỉnh sửa</button>
+                            }
+                        }
+                        else if (task.Status.Equals("Yêu cầu hủy nhiệm vụ"))
+                        {
+                            @if (Context.Session.GetString("leader")?.Equals("IsLeader") == true)
+                            {
+                                <!-- Nút Chấp nhận -->
+                                <button class="btn btn-success w-40 my-2" data-bs-toggle="modal" data-bs-target="#approveCancelTaskModal-@task.TaskId">
+                                    Chấp nhận
+                                </button>
+
+                                <!-- Nút Từ chối -->
+                                <button class="btn btn-danger w-40 my-2" data-bs-toggle="modal" data-bs-target="#rejectCancelTaskModal-@task.TaskId">
+                                    Từ chối
+                                </button>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Chấp nhận -->
+            <div class="modal fade" id="approveCancelTaskModal-@task.TaskId" tabindex="-1" aria-labelledby="approveCancelTaskLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="approveCancelTaskLabel">Chấp nhận hủy nhiệm vụ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <select id="assignedUser" data-taskid="@task.TaskId" class="form-control mb-3">
+                                <option value="">Chọn người thay thế</option>
+
+                                @foreach (var mem in ViewBag.member)
+                                {
+                                    <option value="@mem.UserId">@mem.AssignedUserName</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-success" onclick="approveCancelTask(@task.TaskId)">Chấp nhận</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Từ chối -->
+            <div class="modal fade" id="rejectCancelTaskModal-@task.TaskId" tabindex="-1" aria-labelledby="rejectCancelTaskLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="rejectCancelTaskLabel">Từ chối hủy nhiệm vụ</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Bạn có chắc chắn muốn từ chối yêu cầu hủy nhiệm vụ này?
+                            <input type="hidden" value="@task.AssignedToUserId" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-danger" onclick="rejectCancelTask(@task.TaskId)">Từ chối</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Accept Task -->
+            <div class="modal fade" id="acceptTaskModal-@task.TaskId" tabindex="-1" aria-labelledby="acceptTaskModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="acceptTaskModalLabel">Chi tiết nhiệm vụ - @task.TaskName</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Mô tả:</strong> @task.Description</p>
+                            <p><strong>Bắt đầu:</strong> <span class="badge bg-primary">@task.StartDate</span></p>
+                            <p><strong>Kết thúc:</strong> <span class="badge bg-danger">@task.EndDate</span></p>
+                            <p><strong>Trạng thái:</strong> <span class="badge bg-success">@task.Status</span></p>
+                            <p><strong>Ưu tiên:</strong> @task.Priority</p>
+                            <p>
+                                <strong>Nộp bằng:</strong>
+                                @if (task.SubmissionTypes != null && task.SubmissionTypes.Any())
+                                {
+                                    <ul>
+                                        @foreach (var submissionType in task.SubmissionTypes)
+                                        {
+                                            <li>@submissionType</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span>Chưa có phương thức nộp nào.</span>
+                                }
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(task.AttachmentPath))
+                            {
+                                <p><strong>Tệp đính kèm:</strong> <a href="@Url.Content("~/" + task.AttachmentPath)" target="_blank">Tải xuống tệp đính kèm</a></p>
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <form method="post" id="taskForm-@task.TaskId">
+                                <input type="hidden" value="@task.TaskId" name="taskId" />
+                                <input type="hidden" value="@task.ProjectId" name="projectId" />
+                                <button type="submit" class="btn btn-success">Xác nhận nhận nhiệm vụ</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Editing Task (if Leader) -->
+            @if (Context.Session.GetString("leader").Equals("IsLeader"))
+            {
+<div class="modal fade" id="updateTaskModal-@task.TaskId" tabindex="-1" aria-labelledby="updateTaskModalLabel-@task.TaskId" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTaskModalLabel-@task.TaskId">Chỉnh sửa công việc phụ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for Editing Task -->
+                <form method="post" asp-action="UpdateTask" asp-controller="Groups">
+                    <input type="hidden" name="TaskId" value="@task.TaskId" />
+                     <input type="hidden" name="AssignedToUserId" value="@task.AssignedToUserId" />
+                     <input type="hidden" name="ProjectId" value="@task.ProjectId" />
+                     <input type="hidden" name="Status" value="@task.Status" />
+                     <input type="hidden" name="AttachmentPath" value="@task.AttachmentPath" />
+                    
+                    <!-- Tên nhiệm vụ -->
+                    <div class="mb-3">
+                        <label for="taskName" class="form-label"><strong>Tên nhiệm vụ:</strong></label>
+                        <input type="text" class="form-control" id="taskName" name="TaskName" value="@task.TaskName" required />
+                    </div>
+
+                    <!-- Mô tả chi tiết -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label"><strong>Mô tả chi tiết:</strong></label>
+                        <textarea class="form-control" id="description" name="Description" rows="3">@task.Description</textarea>
+                    </div>
+
+                    <!-- Ngày bắt đầu -->
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label"><strong>Bắt đầu:</strong></label>
+                        <input type="date" class="form-control" id="startDate" name="StartDate" value="@task.StartDate?.ToString("yyyy-MM-dd")" required />
+                    </div>
+
+                    <!-- Ngày kết thúc -->
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label"><strong>Kết thúc:</strong></label>
+                        <input type="date" class="form-control" id="endDate" name="EndDate" value="@task.EndDate?.ToString("yyyy-MM-dd")" required />
+                    </div>
+                    <!-- Mức độ ưu tiên -->
+                                    <div class="mb-3">
+                                        <label for="priority" class="form-label"><strong>Mức độ ưu tiên:</strong></label>
+                                        <select asp-for="@task.Priority" class="form-select" required>
+                                            <option value="Cao">Cao</option>
+                                            <option value="Trung bình">Trung bình</option>
+                                            <option value="Thấp">Thấp</option>
+                                        </select>
+                                    </div>
+                    <!-- Ghi chú thêm -->
+                    <div class="mb-3">
+                        <label for="notes" class="form-label"><strong>Ghi chú thêm:</strong></label>
+                        <textarea class="form-control" id="notes" name="Notes" rows="3">@task.Notes</textarea>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary" disabled>Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+            }
+        }
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
+
+    <script>
+    function approveCancelTask(taskId) {
+        // Tìm đúng phần tử select theo taskId
+        const assignedUserSelect = document.querySelector(`select[data-taskid="${taskId}"]`);
+     
+        // Kiểm tra xem phần tử select có tồn tại không
+        if (!assignedUserSelect) {
+            console.log("Không tìm thấy phần tử select với data-taskid:", taskId);
+            Swal.fire('Lỗi', 'Không tìm thấy phần tử người thực hiện.', 'error');
+            return;
+        }
+
+        console.log("assignedUserSelect:", assignedUserSelect); // In ra đối tượng select
+
+        // Lấy giá trị người thực hiện đã chọn
+        const assignedUserId = assignedUserSelect.value;
+        console.log("Assigned User ID:", assignedUserId);  // Debugging
+
+        // Kiểm tra nếu không có giá trị chọn
+        if (!assignedUserId) {
+            Swal.fire('Vui lòng chọn người thay thế!', '', 'warning');
+            return;
+        }
+        overlay.classList.add("show");
+        // Tiến hành AJAX nếu đã có giá trị chọn
+        $.ajax({
+            type: 'POST',
+            url: '/Groups/ApproveCancelTask',
+            data: {
+                taskId: taskId,
+                assignedUserId: assignedUserId
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire('Thành công!', 'Yêu cầu hủy nhiệm vụ đã được chấp nhận.', 'success')
+                        .then(() => {
+                            location.reload(); // Tải lại trang để cập nhật danh sách nhiệm vụ
+                        });
+                    overlay.classList.remove("show");
+                } else {
+                    Swal.fire('Lỗi', response.message || 'Đã xảy ra lỗi không xác định.', 'error');
+                    overlay.classList.remove("show");
+                }
+            },
+            error: function () {
+                Swal.fire('Lỗi', 'Có lỗi xảy ra khi xử lý yêu cầu.', 'error');
+                overlay.classList.remove("show");
+            }
+        });
+    }
+
+
+
+
+
+
+
+    function rejectCancelTask(taskId) {
+        overlay.classList.add("show");
+        $.ajax({
+            type: 'POST',
+            url: '/Groups/RejectCancelTask',
+            data: { taskId: taskId },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire('Thành công!', 'Yêu cầu hủy nhiệm vụ đã bị từ chối.', 'success')
+                        .then(() => {
+                            location.reload(); // Tải lại trang để cập nhật danh sách nhiệm vụ
+                        });
+                    overlay.classList.remove("show");
+                } else {
+                    Swal.fire('Lỗi', response.message, 'error');
+                    overlay.classList.remove("show");
+                }
+            },
+            error: function () {
+                Swal.fire('Lỗi', 'Có lỗi xảy ra khi xử lý yêu cầu.', 'error');
+                overlay.classList.remove("show");
+            }
+        });
+    }
+
+    // Hiển thị cảnh báo xóa bằng SweetAlert
+function confirmDeleteTask(taskId) {
+
+    Swal.fire({
+        title: 'Bạn có chắc chắn?',
+        text: "Hành động này không thể hoàn tác!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Groups/DeleteTask', // URL đến Action xóa nhiệm vụ
+                data: { taskId: taskId },
+                success: function (response) {
+                    if (response.success) {
+                        // Cập nhật lại danh sách nhiệm vụ
+                        $(`div[data-task-id='${taskId}']`).remove();
+                        Swal.fire('Đã xóa nhiệm vụ', '', 'success');
+
+                    } else {
+
+                        Swal.fire('Nhiệm  vụ đã có người nhận', 'Không thể xóa nhiệm vụ', 'error');
+                    }
+                },
+                error: function () {
+
+                    Swal.fire('Có lỗi xảy ra', '', 'error');
+                }
+            });
+        }
+    });
+}
+
+
+
+   $(document).ready(function () {
+    // Xử lý nhận nhiệm vụ khi submit form
+    $('form[id^="taskForm-"]').submit(function (e) {
+        e.preventDefault(); // Ngăn chặn gửi form mặc định
+
+        var form = $(this);
+        var taskId = form.find('input[name="taskId"]').val(); // Lấy taskId
+        var projectId = form.find('input[name="projectId"]').val(); // Lấy projectId
+
+        $.ajax({
+            type: 'POST',
+            url: '/Groups/RecivedTask', // URL đến Action nhận nhiệm vụ
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    // Hiển thị Toast thông báo thành công
+                    $('#toastMessage').text(response.message);
+                    var toastEl = document.querySelector('.toast');
+                    var toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+
+                    // Cập nhật lại danh sách nhiệm vụ
+                    $('#taskList').html(response.tasksHtml);
+
+                    // Đóng modal nếu đang mở
+                    var modals = document.querySelectorAll('.modal.show');
+                    modals.forEach(modalEl => {
+                        var modal = bootstrap.Modal.getInstance(modalEl);
+                        modal.hide();
+                    });
+                        var taskCard = $(`div[data-task-id="${response.taskId}"]`);
+                        taskCard.find('.assigned-user-name').text(response.userName);
+                    // Vô hiệu hóa nút nhận nhiệm vụ và thay đổi văn bản
+                    var taskButton = $(`button[data-bs-target="#acceptTaskModal-${taskId}"]`);
+                        var dis = $(`button[data-dis="#acceptTaskModal-${taskId}"]`);
+                  
+                    taskButton.prop('disabled', true);
+                        dis.prop('disabled', true);
+                    taskButton.text('Đã nhận nhiệm vụ');
+                } else {
+                    alert('Lỗi khi nhận nhiệm vụ: ' + response.message);
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi khi gửi dữ liệu:', error);
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        });
+    });
+});
+
+    </script>
+
+
+
+    <script>
+    const overlay = document.getElementById("loadingOverlay");
+    function confirmCancelTask(taskId) {
+        // Hiển thị overlay
+     
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn hủy nhiệm vụ này?',
+            text: "Khi bạn hủy, trưởng nhóm sẽ nhận được yêu cầu của bạn và trưởng nhóm sẽ phải phê duyệt nó. Lúc đó, nhiệm vụ của bạn sẽ được hủy.",
+            icon: 'warning',
+            input: 'textarea',
+            inputPlaceholder: 'Nhập lý do hủy nhiệm vụ...',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Xác nhận hủy',
+            cancelButtonText: 'Hủy',
+            preConfirm: (reason) => {
+                if (!reason) {
+                    Swal.showValidationMessage('Vui lòng nhập lý do hủy nhiệm vụ!');
+                }
+                return reason;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Gửi AJAX POST yêu cầu hủy nhiệm vụ
+                overlay.classList.add("show");
+                $.ajax({
+                    type: 'POST',
+                    url: '/Groups/CancelTask', // URL xử lý yêu cầu
+                    data: {
+                        TaskId: taskId,
+                        Reason: result.value
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Cập nhật trạng thái tạm thời
+                            const taskCard = $(`#task-card-${taskId}`); // Định danh thẻ nhiệm vụ
+                            taskCard.find('.badge-status').text('Yêu cầu hủy nhiệm vụ').removeClass('bg-success').addClass('bg-warning');
+                            taskCard.find('.btn-success').attr('disabled', true); // Vô hiệu hóa nút "Nhận nhiệm vụ"
+                            taskCard.find('.btn-danger').attr('disabled', true);  // Vô hiệu hóa nút "Từ chối nhiệm vụ"
+
+                            // Hiển thị thông báo thành công
+                            Swal.fire('Đã gửi yêu cầu thành công!', response.message, 'success');
+                            // Đảm bảo luôn ẩn overlay
+                            overlay.classList.remove("show");
+                        } else {
+                            Swal.fire('Lỗi', response.message, 'error');
+                            // Đảm bảo luôn ẩn overlay
+                            overlay.classList.remove("show");
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Lỗi', 'Có lỗi xảy ra khi hủy nhiệm vụ.', 'error');
+                        // Đảm bảo luôn ẩn overlay
+                        overlay.classList.remove("show");
+                    }
+                });
+            }
+        });
+    }
+
+
+
+</script>

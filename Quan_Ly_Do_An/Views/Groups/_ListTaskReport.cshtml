@@ -1,0 +1,86 @@
+﻿@model List<ProgressReportModel>
+<h5 class="text-center text-success fw-bold mb-4">
+    Báo cáo tiến độ của nhóm
+</h5>
+<div class="card">
+    <div class="card-body">
+        <ul class="list-group" id="taskList">
+            @foreach (var report in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-info">@report.ReporterName</span> đã gửi file báo cáo cho nhiệm vụ:<strong> @report.TaskName</strong>
+                        <br/>
+                        <strong>Báo cáo ngày:</strong> @report.ReportDate
+                        <br>
+                        <span class="badge bg-secondary">File: @System.IO.Path.GetFileName(report.AttachedFilePath)</span>
+                    </div>
+                    <!-- Nút để hiển thị chi tiết báo cáo -->
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailsReportModal1"
+                            data-report-date="@report.ReportDate" data-file="@report.AttachedFilePath" data-description="@report.WorkDescription"
+                            data-reporter-name="@report.ReporterName">
+                        Xem chi tiết
+                    </button>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="detailsReportModal1" tabindex="-1" aria-labelledby="detailsReportModal1Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsReportModal1Label">Chi tiết báo cáo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 id="reportUserName"><strong>Báo cáo của:</strong> </h5>
+                <p><strong>Ngày báo cáo:</strong> <span id="reportDate"></span></p>
+                <p><strong>Mô tả công việc:</strong> <span id="workDescription"></span></p>
+                <p><strong>Tệp đính kèm:</strong> <span id="attachedFile"></span></p>
+                <a href="" id="fileDownloadLink" class="btn btn-primary" target="_blank" style="display: none;">Tải xuống</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Cập nhật modal khi người dùng nhấn nút
+    var reportModal = document.getElementById('detailsReportModal1');
+    reportModal.addEventListener('show.bs.modal', function (event) {
+        // Lấy dữ liệu từ button (được truyền qua thuộc tính data-)
+        var button = event.relatedTarget;
+        var reportDate = button.getAttribute('data-report-date');
+        var attachedFile = button.getAttribute('data-file');
+        var workDescription = button.getAttribute('data-description');
+        var reporterName = button.getAttribute('data-reporter-name');
+
+        // Cập nhật modal với thông tin báo cáo
+        var modalTitle = reportModal.querySelector('.modal-title');
+        var reportDateElement = reportModal.querySelector('#reportDate');
+        var attachedFileElement = reportModal.querySelector('#attachedFile');
+        var workDescriptionElement = reportModal.querySelector('#workDescription');
+        var reporterNameElement = reportModal.querySelector('#reportUserName');
+        var fileDownloadLink = reportModal.querySelector('#fileDownloadLink');
+
+        // Cập nhật các phần tử trong modal
+        modalTitle.textContent = 'Chi tiết báo cáo ngày: ' + reportDate;
+        reportDateElement.textContent = reportDate;
+        attachedFileElement.textContent = attachedFile || 'Không có tệp';
+        workDescriptionElement.textContent = workDescription || 'Chưa có mô tả';
+        reporterNameElement.textContent = 'Báo cáo của: ' + reporterName;
+
+        // Nếu có tệp đính kèm, hiển thị liên kết tải xuống
+        if (attachedFile) {
+            fileDownloadLink.href = attachedFile; // Cập nhật đường dẫn tải tệp
+            fileDownloadLink.style.display = 'inline'; // Hiển thị liên kết tải xuống
+        } else {
+            fileDownloadLink.style.display = 'none'; // Ẩn nếu không có tệp
+        }
+    });
+</script>

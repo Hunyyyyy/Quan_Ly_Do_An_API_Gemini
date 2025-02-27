@@ -1,0 +1,525 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ - Quản lý đồ án";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+@model DashboardStatisticsViewModel
+   <style>
+    .main-else {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .main-else #hero {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('assets/img/bg-index.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+    .container {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    .progress-bar {
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        margin-top: 5px;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    .sales-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        margin-top: 15px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .sales-button:hover {
+            background-color: #0056b3;
+        }
+
+    .chart {
+        width: 400px;
+        height: 250px;
+        position: relative;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .chart-line {
+        width: 100%;
+        height: 2px;
+        background-color: #007BFF;
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+    }
+
+    .chart-point {
+        width: 10px;
+        height: 10px;
+        background-color: #007BFF;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .chart-label {
+        font-size: 12px;
+        color: #555;
+        position: absolute;
+    }
+
+    .chart-axis {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        height: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .chart-axis div {
+            font-size: 12px;
+            color: #555;
+        }
+
+    .section-container {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+        flex: 1;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        color: #333333;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+        .table th, .table td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .table th {
+            background-color: #f4f4f4;
+            color: #555555;
+        }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+      table ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+            color: #555555;
+        }
+
+        table ul li:last-child {
+                border-bottom: none;
+            }
+
+
+            /* nhắc nhở */
+    .section {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .welcome-message {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    .projects-container {
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        max-height: 400px; /* Thanh cuộn khi danh sách dài */
+        overflow-y: auto;
+    }
+
+    .projects-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .project-item {
+        padding: 15px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .project-info p {
+        margin: 5px 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .progress-status {
+        margin-top: 10px;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+    .text-warning {
+        color: #ffc107;
+        font-weight: bold;
+    }
+
+    .text-success {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .badge {
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 5px;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+        .badge:hover {
+            background-color: #c82333;
+        }
+
+
+</style>
+    
+@if (Context.Session.GetString("IsInstructor")!=null && Model!=null)
+{
+    
+
+<div class="section-container">
+
+    <!-- Bảng thông tin lớp học -->
+    <div class="section">
+        <h3>Các lớp học giảng viên phụ trách</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên lớp học</th>
+                    <th>Mã môn học</th>
+                    <th>Số lượng sinh viên</th>
+                    <th>Số dự án</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var instructorClass in Model.InstructorClassView)
+                {
+                    <tr>
+                        <td>@instructorClass.ClassName</td>
+                        <td>@instructorClass.SubjectCode</td>
+                        <td>@instructorClass.TotalStudents</td>
+                        <td>@instructorClass.TotalProjects</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Danh sách thông báo -->
+        <div class="section">
+            <h3 >Tiến độ</h3>
+            <p class="welcome-message">
+                @if (Model.ProjectsWithCompletion == null || !Model.ProjectsWithCompletion.Any())
+                {
+                    <span class="typed" data-typed-items="Chào: @Context.Session.GetString("UserName")!!, Các nhóm đều hoàn thành tốt!"></span>
+                }
+                else
+                {
+                    <span class="typed" data-typed-items="Chào @Context.Session.GetString("UserName")!!, Hãy nhắc nhở các nhóm nhanh nhất có thể!!"></span>
+                }
+                <span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
+            </p>
+
+            @if (Model.ProjectsWithCompletion != null && Model.ProjectsWithCompletion.Any())
+            {
+                <div class="projects-container">
+                    <ul class="projects-list">
+                        @foreach (var notification in Model.ProjectsWithCompletion)
+                        {
+                            <li class="project-item">
+                                <div class="project-info">
+                                    <p><strong>@notification.Project.ProjectName</strong></p>
+                                    <p>- Tiến độ: <strong>@notification.CompletionPercentage%</strong></p>
+                                    <p>- Tổng số ngày: <strong>@notification.TotalDay</strong></p>
+                                    <p>- Số ngày còn lại: <strong>@notification.RemainingDays</strong> ngày</p>
+                                </div>
+
+                                @* Tính toán tiến độ *@
+                                @{
+                                    var elapsedDays = notification.TotalDay - notification.RemainingDays;
+                                    var elapsedPercentage = (notification.TotalDay > 0)
+                                    ? (double)elapsedDays / notification.TotalDay * 100
+                                    : 0;
+                                }
+
+                                <div class="progress-status">
+                                    @if (notification.TotalDay == 0 && notification.CompletionPercentage==0)
+                                    {
+                                        <span class="text-danger">Nhóm này chưa tạo giai đoạn cho dự án!</span>
+                                    }
+                                    else if (notification.RemainingDays == 0 && notification.CompletionPercentage == 0)
+                                    {
+                                        <span class="text-warning">Cảnh báo: Kết thúc dự án, không hoàn thành dự án.</span>
+                                    }
+                                    else if (elapsedPercentage > 50 && notification.CompletionPercentage < 50)
+                                    {
+                                        <span class="text-danger">Cảnh báo: Đã trôi qua hơn 50% thời gian nhưng tiến độ vẫn chưa đạt 50%!</span>
+                                        <button class="badge bg-danger" onclick="sendReminder(@notification.Project.ProjectId)">Cần nhắc nhở nhóm này</button>
+                                    }
+                                    else if (notification.RemainingDays <= 14 && notification.CompletionPercentage < 80)
+                                    {
+                                        <span class="text-warning">Cảnh báo: Chỉ còn ít ngày để hoàn thành, hãy tăng tốc!</span>
+                                        <button class="badge bg-danger" onclick="sendReminder(@notification.Project.ProjectId)">Cần nhắc nhở nhóm này</button>
+                                    }
+                                    else if (notification.CompletionPercentage == 100)
+                                    {
+                                        <span class="text-success">Nhóm này đã hoàn thiện dự án!</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Dự án đang tiến triển tốt.</span>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+        </div>
+
+
+
+
+
+
+</div>
+<div class="container" style="display: flex; gap: 20px; align-items: flex-start;">
+    <!-- Bảng tiến độ -->
+    <div style="flex: 3; max-width: 60%;">
+        <h2>Tiến Độ Lớp Học</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên Lớp Học</th>
+                    <th>Tổng Số Nhóm</th>
+                    <th>Số Nhóm Hoàn Thành</th>
+                    <th>Ưu Tiên</th>
+                    <th>Tiến Độ</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var progress in Model.ClassProgressView)
+                {
+                    <tr>
+                        <td>@progress.ClassName</td>
+                        <td>@progress.TotalGroups</td>
+                        <td>@progress.CompletedGroups</td>
+                        <td>
+                            @if (progress.ProgressPercent <= 30)
+                            {
+                                <span class="priority-low">Thấp</span>
+                            }
+                            else if (progress.ProgressPercent > 30 && progress.ProgressPercent <= 60)
+                            {
+                                <span class="priority-medium">Trung Bình</span>
+                            }
+                            else
+                            {
+                                <span class="priority-high">Cao</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: @progress.ProgressPercent%;
+                                    background-color: @(progress.ProgressPercent <= 30 ? "#dc3545" :
+                                                        progress.ProgressPercent <= 60 ? "#ffc107" : "#28a745");">
+                                </div>
+                            </div>
+                            <span>@progress.ProgressPercent%</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Biểu đồ tiến độ -->
+    <div style="flex: 2; max-width: 40%;">
+        <h2>Biểu Đồ Tiến Độ</h2>
+        <canvas id="classProgressChart" width="400" height="300"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Dữ liệu giả lập
+    const classNames = @Html.Raw(Json.Serialize(Model.ClassProgressView.Select(c => c.ClassName)));
+    const progressPercents = @Html.Raw(Json.Serialize(Model.ClassProgressView.Select(c => c.ProgressPercent)));
+
+    // Tạo biểu đồ
+    const ctx = document.getElementById('classProgressChart').getContext('2d');
+    const classProgressChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: classNames,
+            datasets: [{
+                label: 'Phần Trăm Hoàn Thành (%)',
+                data: progressPercents,
+                backgroundColor: progressPercents.map(percent =>
+                    percent <= 30 ? '#dc3545' :
+                        percent <= 60 ? '#ffc107' : '#28a745'),
+                borderColor: '#ccc',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        stepSize: 10
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return `${context.parsed.y}% hoàn thành`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    </script>
+}
+else
+{
+    <main class="main-else">
+        <section id="hero" class="hero section light-background" style="height: 100vh; background-image: url('assets/img/bg-index.jpg'); background-size: cover; background-position: center; position: relative; display: flex; align-items: center; justify-content: center; color: black; text-align: center;">
+            <div class="container" style="max-width: 800px; padding: 20px;">
+                <h2 style="font-size: 3rem; font-weight: bold; margin-bottom: 20px; color: #ffffff; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">
+                    Xin chào: @Context.Session.GetString("UserName")!
+                </h2>
+                <p style="font-size: 1.5rem; margin-bottom: 30px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">
+                    Hãy trở thành:
+                    <span class="typed" data-typed-items="Người dẫn đầu, Nhà sáng tạo, Sinh viên xuất sắc, Người quản lý dự án giỏi" style="color: #ffd700;">
+                        Người dẫn đầu
+                    </span>
+                    <span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
+                </p>
+
+                <div class="social-links" style="margin-top: 40px;">
+                    <a href="#" style="margin: 0 10px; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"><i class="bi bi-twitter"></i></a>
+                    <a href="#" style="margin: 0 10px; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"><i class="bi bi-facebook"></i></a>
+                    <a href="#" style="margin: 0 10px; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"><i class="bi bi-instagram"></i></a>
+                    <a href="#" style="margin: 0 10px; font-size: 1.5rem; color: #fff; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+}
+
+

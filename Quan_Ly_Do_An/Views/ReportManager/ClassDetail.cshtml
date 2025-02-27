@@ -1,0 +1,484 @@
+﻿
+@{
+    ViewData["Title"] = "ClassDetail";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+@model ClassDetailViewModel
+<style>
+    .hero {
+        background-color: #f8f9fa;
+        padding: 60px 0;
+    }
+
+        .hero img {
+            max-height: 350px;
+        }
+
+    .card {
+        border-radius: 10px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+    .project-card {
+        background: #ffffff;
+        border-left: 5px solid #007bff;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.4em 0.8em;
+    }
+
+    #groupTable thead th {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    #groupTable tbody td {
+        text-align: center;
+    }
+
+    #groupTable .clickable-row:hover {
+        background-color: #f8f9fa;
+    }
+    /* Cải thiện giao diện bảng */
+    .table-responsive {
+        margin-top: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    /* Tạo tiến độ biểu đồ thanh */
+    .progress-bar {
+        background-color: #4caf50;
+        font-weight: bold;
+    }
+
+    /* Cải thiện giao diện tổng thể */
+    h3, h5 {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 600;
+    }
+
+</style>
+<h2>Báo cáo & tiến độ của lớp @ViewBag.ClassName</h2>
+<p><span class="typed" data-typed-items="Các Thông số về đồ án của lớp,của nhóm sẽ hiển thị ở đây"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="groupListTab" data-bs-toggle="tab" href="#groupList" role="tab" aria-controls="groupList" aria-selected="true">Danh sách nhóm</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="classStatisticsTab" data-bs-toggle="tab" href="#classStatistics" role="tab" aria-controls="classStatistics" aria-selected="false">Thống kê theo lớp</a>
+    </li>
+</ul>
+<!-- Tab Content -->
+<div class="tab-content" id="myTabContent">
+    <!-- Tab 1: Danh sách nhóm -->
+    <div class="tab-pane fade show active" id="groupList" role="tabpanel" aria-labelledby="groupListTab">
+        @if (Model != null)
+        {
+            <table class="table table-bordered table-hover table-striped shadow-sm rounded" id="groupTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Tên dự án</th>
+                        <th>Tên nhóm</th>
+                        <th>Trưởng nhóm</th>
+                        <th>Mã môn học</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Class)
+                    {
+                        <tr data-class-id="@item.ClassId"
+                            data-class-name="@item.ClassName"
+                            data-class-subcode="@item.SubjectCode"
+                            data-project-id="@item.ProjectId"
+                            data-project-name="@item.ProjectName"
+                            data-project-leader="@item.ProjectLeader"
+                            data-group-name="@item.GroupNumber"
+                            class="clickable-row" style="cursor:pointer">
+                            <td>@item.ProjectName</td>
+                            <td>Nhóm @item.GroupNumber</td>
+                            <td>@item.ProjectLeader</td>
+                            <td>@item.SubjectCode</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <!-- Modal -->
+            <div class="modal fade" id="groupDetailsModal" tabindex="-1" role="dialog" aria-labelledby="groupDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="groupDetailsModalLabel">Chi tiết nhóm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Nội dung chi tiết nhóm sẽ được hiển thị tại đây -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Javascript to trigger modal when a row is clicked -->
+            <script>
+                $(document).ready(function () {
+                    $('#groupTable tbody').on('click', '.clickable-row', function () {
+                        var classId = $(this).data('class-id');
+                        var projectId = $(this).data('project-id');
+                        var groupName = $(this).data('group-name');
+                        var projectName = $(this).data('project-name');
+                        var projectLeader = $(this).data('project-leader');
+
+                        // Cập nhật modal với dữ liệu
+                        $('#groupDetailsModal .modal-body').html(`
+                                    <p><strong>Lớp:</strong> ${$(this).data('class-name')} - ${$(this).data('class-subcode')}</p>
+                                    <p><strong>Dự án:</strong> ${projectName}</p>
+                                    <p><strong>Trưởng nhóm:</strong> ${projectLeader}</p>
+                                    <p><strong>Tên nhóm:</strong> ${groupName}</p>
+                                `);
+
+                        // Hiển thị modal
+                        $('#groupDetailsModal').modal('show');
+                    });
+                });
+            </script>
+
+            <form id="hiddenForm" method="post" action="@Url.Action("GroupDetail", "ReportManager")" style="display:none;">
+                <input type="hidden" name="ClassId" id="ClassId">
+                <input type="hidden" name="ClassName" id="ClassName">
+                <input type="hidden" name="SubjectCode" id="SubjectCode">
+                <input type="hidden" name="ProjectId" id="ProjectId">
+                <input type="hidden" name="ProjectName" id="ProjectName">
+                <input type="hidden" name="ProjectLeader" id="ProjectLeader">
+                <input type="hidden" name="GroupNumber" id="GroupNumber">
+            </form>
+
+
+
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Lấy tất cả các dropdown item
+                    document.querySelectorAll('.dropdown-item').forEach(item => {
+                        item.addEventListener('click', function () {
+                            // Lấy ClassId từ phần tử đã chọn
+                            const selectedClassId = this.getAttribute('data-class-id');
+                            const selectedClassName = this.getAttribute('data-class-name');
+                            document.getElementById('classDropdownButton').textContent = selectedClassName;
+                            // Lọc bảng để chỉ hiển thị các nhóm của ClassId được chọn
+                            document.querySelectorAll('#groupTable tbody tr').forEach(row => {
+                                if (row.getAttribute('data-class-id') === selectedClassId) {
+                                    row.style.display = '';  // Hiển thị các nhóm của ClassId đã chọn
+                                } else {
+                                    row.style.display = 'none';  // Ẩn các nhóm khác
+                                }
+                            });
+                        });
+                    });
+                    const rows = document.querySelectorAll('.clickable-row');
+
+                    rows.forEach(row => {
+                        row.addEventListener('click', (event) => {
+                            if (!event.target.closest('button') && !event.target.closest('a')) {
+                                // Lấy các giá trị từ thuộc tính data- của row
+                                const ClassId = row.getAttribute('data-class-id');
+                                const ClassName = row.getAttribute('data-class-name');
+                                const SubjectCode = row.getAttribute('data-class-subcode');
+                                const ProjectId = row.getAttribute('data-project-id');
+                                const ProjectName = row.getAttribute('data-project-name');
+                                const ProjectLeader = row.getAttribute('data-project-leader');
+                                const GroupNumber = row.getAttribute('data-group-name');
+
+                                // Gán giá trị cho các trường ẩn trong form
+                                document.getElementById('ClassId').value = ClassId;
+                                document.getElementById('ClassName').value = ClassName;
+                                document.getElementById('SubjectCode').value = SubjectCode;
+                                document.getElementById('ProjectId').value = ProjectId;
+                                document.getElementById('ProjectName').value = ProjectName;
+                                document.getElementById('ProjectLeader').value = ProjectLeader;
+                                document.getElementById('GroupNumber').value = GroupNumber;
+
+                                // Gửi form mà không hiển thị trên URL
+                                document.getElementById('hiddenForm').submit();
+                            }
+                        });
+                    });
+                });
+            </script>
+
+        }
+    </div>
+    <!-- Tab 2: Thống kê theo lớp -->
+    <div class="tab-pane fade" id="classStatistics" role="tabpanel" aria-labelledby="classStatisticsTab">
+        <!-- Tab Nav -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="group-progress" aria-selected="true">Tổng quan lớp</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="group-progress-tab" data-bs-toggle="tab" href="#group-progress" role="tab" aria-controls="group-progress" aria-selected="false">Tiến độ các nhóm</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="group-statistics-tab" data-bs-toggle="tab" href="#group-statistics" role="tab" aria-controls="group-statistics" aria-selected="false">Thông tin thống kê nhóm</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="report-tab" data-bs-toggle="tab" href="#report" role="tab" aria-controls="report" aria-selected="false">Báo cáo định kỳ</a>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Overview Section -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <section id="overview" class="overview section py-5">
+                <div class="container">
+
+                    <div class="row">
+                        <!-- Card: Tổng số đồ án -->
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-file-earmark-text display-4 text-primary mb-3"></i>
+                                    <h4>@Model.ProjectStatistics.TotalProjects</h4> <!-- Dynamic total projects -->
+                                    <p class="mb-0">Tổng số dự án</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Card: Thành viên -->
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-people display-4 text-success mb-3"></i>
+                                    <h4>@Model.ProjectStatistics.TotalStudents</h4> <!-- Dynamic number of students -->
+                                    <p class="mb-0">Tổng số sinh viên</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card: Thông báo -->
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-bookmark-check display-4 text-danger mb-3"></i>
+                                    <h4>@Model.ProjectStatistics.TotalReportsApproved</h4> <!-- Dynamic approved reports as notifications -->
+                                    <p class="mb-0">Báo cáo đã phê duyệt</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card: Thông báo -->
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-bookmark-x display-4 text-danger mb-3"></i>
+                                    <h4>@Model.ProjectStatistics.TotalReportsRejected</h4> <!-- Dynamic approved reports as notifications -->
+                                    <p class="mb-0">Báo cáo bị từ chối</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card: Tiến độ -->
+                        <div class="col-lg-3 col-md-6 mb-4" style="width:100%">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-graph-up display-4 text-warning mb-3"></i>
+                                    <h4>@Model.ProjectStatistics.AverageCompletionRate%</h4> <!-- Dynamic average completion rate -->
+                                    <p class="mb-0">Tỷ lệ hoàn thành trung bình</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+                <!-- Projects Section -->
+                <section id="projects" class="projects section py-5">
+                    <div class="container">
+                        <div class="section-title text-center mb-5">
+
+                                        <h2>Báo cáo tiến độ các nhóm</h2>
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên nhóm</th>
+                                                    <th>Tổng nhiệm vụ</th>
+                                                    <th>Báo cáo đã nộp</th>
+                                                    <th>Báo cáo hoàn thành</th>
+                                                    <th>Tỷ lệ hoàn thành (%)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < Model.GroupProgressView.Count; i++)
+                                                {
+                                                        var group = Model.GroupProgressView[i];
+                                                    <tr>
+                                                        <td>@(i + 1)</td>
+                                                        <td>@group.ProjectName</td>
+                                                        <td>@group.TotalTasksCreated</td>
+                                                        <td>@group.TotalReportsSubmitted</td>
+                                                        <td>@group.TotalReportsCompleted</td>
+                                                        <td>@group.CompletionPercentage1%</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Tiến độ các nhóm -->
+            <div class="tab-pane fade show" id="group-progress" role="tabpanel" aria-labelledby="group-progress-tab">
+                <h3 class="text-center text-primary">Tiến độ các nhóm</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nhóm</th>
+                                <th>Tổng số nhiệm vụ</th>
+                                <th>Nhiệm vụ hoàn thành</th>
+                                <th>Nhiệm vụ đang thực hiện</th>
+                                <th>Nhiệm vụ chưa bắt đầu</th>
+                                <th>Tiến độ (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var project in Model.GroupProgressDetails)
+                            {
+                                @foreach (var group in project.Groups)
+                                {
+                                    <tr>
+                                        <td>Nhóm @group.GroupNumber</td>
+                                        <td>@group.TotalTasks</td>
+                                        <td>@group.CompletedTasks</td>
+                                        <td>@group.InProgressTasks</td>
+                                        <td>@group.PendingTasks</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" style="width: @group.ProgressPercentage%" aria-valuenow="@group.ProgressPercentage" aria-valuemin="0" aria-valuemax="100">
+                                                    @group.ProgressPercentage %
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Thông tin thống kê nhóm -->
+            <div class="tab-pane fade" id="group-statistics" role="tabpanel" aria-labelledby="group-statistics-tab">
+                <h3 class="text-center text-primary mb-4">Thông tin thống kê nhóm</h3>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-success shadow-sm">
+                                <div class="card-header text-white bg-success">
+                                    <h5 class="card-title">Nhóm hoàn thành</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-text">@Model.GroupCompletionStats.CompletedGroups</h3>
+                                    <p class="text-muted">Số nhóm đã hoàn thành công việc.</p>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: @((Model.GroupCompletionStats.CompletedGroups * 100) / (Model.GroupCompletionStats.CompletedGroups + Model.GroupCompletionStats.IncompleteGroups))%" role="progressbar" aria-valuenow="@Model.GroupCompletionStats.CompletedGroups" aria-valuemin="0" aria-valuemax="@Model.GroupCompletionStats.CompletedGroups + Model.GroupCompletionStats.IncompleteGroups">
+                                            @Model.GroupCompletionStats.CompletedGroups nhóm
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card border-danger shadow-sm">
+                                <div class="card-header text-white bg-danger">
+                                    <h5 class="card-title">Nhóm chưa hoàn thành</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-text">@Model.GroupCompletionStats.IncompleteGroups</h3>
+                                    <p class="text-muted">Số nhóm chưa hoàn thành công việc.</p>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: @((Model.GroupCompletionStats.IncompleteGroups * 100) / (Model.GroupCompletionStats.CompletedGroups + Model.GroupCompletionStats.IncompleteGroups))%" role="progressbar" aria-valuenow="@Model.GroupCompletionStats.IncompleteGroups" aria-valuemin="0" aria-valuemax="@Model.GroupCompletionStats.CompletedGroups + Model.GroupCompletionStats.IncompleteGroups">
+                                            @Model.GroupCompletionStats.IncompleteGroups nhóm
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.GroupCompletionStats == null || (Model.GroupCompletionStats.CompletedGroups == 0 && Model.GroupCompletionStats.IncompleteGroups == 0))
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            Không có dữ liệu thống kê nhóm.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Báo cáo định kỳ -->
+            <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+                <h3 class="text-center text-primary">Báo cáo định kỳ</h3>
+                <!-- Bọc canvas trong một div và căn giữa -->
+                <div class="chart-container" style="width: 1000px; height: 1000px; margin: 0 auto;">
+                    <canvas id="reportChart"></canvas> 
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+
+<!-- Thêm Chart.js từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Cài đặt biểu đồ báo cáo định kỳ
+    var ctx = document.getElementById('reportChart').getContext('2d');
+    var reportChart = new Chart(ctx, {
+        type: 'bar',  // Biểu đồ cột
+        data: {
+            labels: ['Tổng số báo cáo', 'Báo cáo nộp đúng hạn', 'Báo cáo nộp trễ'],
+            datasets: [{
+                label: 'Số lượng báo cáo',
+                data: [
+    @Model.ReportSubmissionStats.TotalReports,
+    @Model.ReportSubmissionStats.OnTimeReports,
+    @Model.ReportSubmissionStats.LateReports
+                                ],
+                backgroundColor: ['#f39c12', '#2ecc71', '#e74c3c'],
+                borderColor: ['#f39c12', '#2ecc71', '#e74c3c'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Thống kê Báo cáo định kỳ'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(
+    @Model.ReportSubmissionStats.TotalReports,
+    @Model.ReportSubmissionStats.OnTimeReports,
+    @Model.ReportSubmissionStats.LateReports
+                                    ) + 1
+                }
+            }
+        }
+    });
+</script>
+

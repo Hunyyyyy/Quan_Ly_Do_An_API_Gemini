@@ -1,0 +1,283 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "MainLayout";
+}
+@model IEnumerable<ClassModel>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="text-primary fw-bold">Danh sách lớp mà bạn đã tham gia</h3>
+</div>
+
+<div class="container rounded bg-light mt-5 mb-5 p-4 shadow-lg">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Mã lớp</th>
+                <th>Tên môn học</th>
+                <th>Mã môn học</th>
+                <th>Tên giảng viên</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                int count = 1;
+                @foreach (var item in Model)
+                {
+                    <tr data-id="@item.ClassId"
+                        data-class-name="@item.ClassName"
+                        data-subject-code="@item.SubjectCode"
+                        data-instructor-name="@item.InstructorFullName"
+                        class="clickable-row" style="cursor:pointer;">
+                        <td>@count</td>
+                        <td>@item.ClassName</td>
+                        <td>@item.SubjectCode</td>
+                        <td>@item.InstructorFullName</td>
+                    </tr>
+                    count++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Form để gửi dữ liệu mà không cần hiển thị trên URL -->
+<form id="hiddenForm" method="post" action="@Url.Action("Group", "Groups")" style="display:none;">
+    <input type="hidden" name="ClassId" id="ClassId">
+    <input type="hidden" name="ClassName" id="ClassName">
+    <input type="hidden" name="SubjectCode" id="SubjectCode">
+    <input type="hidden" name="InstructorFullName" id="InstructorFullName">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const rows = document.querySelectorAll('.clickable-row');
+
+        rows.forEach(row => {
+            row.addEventListener('click', (event) => {
+                if (!event.target.closest('button') && !event.target.closest('a')) {
+                    // Lấy các giá trị từ thuộc tính data- của row
+                    const ClassId = row.getAttribute('data-id');
+                    const ClassName = row.getAttribute('data-class-name');
+                    const SubjectCode = row.getAttribute('data-subject-code');
+                    const InstructorFullName = row.getAttribute('data-instructor-name');
+
+                    // Gán giá trị cho các trường ẩn trong form
+                    document.getElementById('ClassId').value = ClassId;
+                    document.getElementById('ClassName').value = ClassName;
+                    document.getElementById('SubjectCode').value = SubjectCode;
+                    document.getElementById('InstructorFullName').value = InstructorFullName;
+
+                    // Gửi form mà không hiển thị trên URL
+                    document.getElementById('hiddenForm').submit();
+                }
+            });
+        });
+    });
+</script>
+    @* <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999; /* Đặt z-index cao để nổi bật hơn */
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+            .notification-icon:hover {
+                transform: scale(1.1);
+            }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 12px;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Đảm bảo dropdown cũng có z-index cao */
+            opacity: 0; /* Thêm thuộc tính opacity */
+            transform: translateY(-10px); /* Thêm thuộc tính transform */
+            transition: opacity 0.3s ease, transform 0.3s ease; /* Thêm transition */
+        }
+
+            .notification-dropdown.show {
+                display: block; /* Hiển thị dropdown khi có class 'show' */
+                opacity: 1; /* Thay đổi opacity khi hiển thị */
+                transform: translateY(0); /* Thay đổi transform khi hiển thị */
+            }
+
+        .notification-item {
+    position: relative;
+    width: 500px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    opacity: 0; /* Ẩn thông báo ban đầu */
+    transform: translateY(10px); /* Đẩy thông báo xuống dưới */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Thêm transition */
+}
+
+            .notification-item.show {
+    opacity: 1; /* Hiện thông báo */
+    transform: translateY(0); /* Trở về vị trí ban đầu */
+}
+.notification-item .unread-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.notification-item.read .unread-indicator {
+    display: none; /* Ẩn chấm đỏ khi đã đọc */
+}
+
+            .notification-item:last-child {
+                border-bottom: none;
+            }
+
+            .notification-item strong {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            /* Hiệu ứng hover cho các thẻ thông báo */
+            .notification-item:hover {
+                background-color: #f0f0f0; /* Thay đổi màu nền khi hover */
+                cursor: pointer; /* Thay đổi con trỏ khi hover */
+                transform: scale(1.02); /* Tăng kích thước nhẹ khi hover */
+                transition: background-color 0.3s ease, transform 0.2s ease; /* Thêm transition */
+            }
+    </style> *@
+    @*     <script>
+        document.getElementById('notification-icon').addEventListener('click', function (event) {
+            event.stopPropagation(); // Ngăn chặn sự kiện click từ việc lan truyền
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('show'); // Thay đổi class để hiển thị hoặc ẩn dropdown
+            console.log('click');
+            // Hiệu ứng cho từng thông báo
+            const items = dropdown.querySelectorAll('.notification-item');
+            if (dropdown.classList.contains('show')) {
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('show'); // Thêm class show cho từng thông báo
+                    }, index * 100); // Thêm độ trễ cho mỗi thông báo
+                });
+            } else {
+                items.forEach(item => {
+                    item.classList.remove('show'); // Xóa class show khi ẩn dropdown
+                });
+            }
+        });
+
+        // Đóng dropdown khi click ra ngoài
+        document.addEventListener('click', function () {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.remove('show'); // Xóa class 'show' để ẩn dropdown
+
+            // Ẩn các thông báo
+            const items = dropdown.querySelectorAll('.notification-item');
+            items.forEach(item => {
+                item.classList.remove('show'); // Xóa class show khi ẩn dropdown
+            });
+        });
+
+        // Gửi yêu cầu AJAX để lấy thông báo từ backend
+      // Gửi yêu cầu AJAX để lấy thông báo từ backend
+function loadNotifications(userId) {
+    $.ajax({
+        url: `/Home/GetNotifications?userId=${userId}`, // Đảm bảo userId được truyền vào
+        type: 'GET',
+        success: function (notifications) {
+            // Đếm số lượng thông báo chưa đọc
+            const unreadNotifications = notifications.filter(notification => !notification.isRead); // Lọc ra thông báo chưa đọc
+            const unreadCount = unreadNotifications.length; // Số lượng thông báo chưa đọc
+
+            // Cập nhật số lượng thông báo chưa đọc
+            $('#notification-count').text(unreadCount);
+
+            // Cập nhật nội dung thông báo
+            const notificationDropdown = $('#notification-dropdown');
+            notificationDropdown.empty(); // Xóa nội dung hiện tại
+
+            notifications.forEach(notification => {
+                // Kiểm tra xem thông báo đã đọc hay chưa
+                const isReadClass = notification.isRead ? 'read' : 'unread';
+
+                const notificationItem = $('<div>')
+                    .addClass('notification-item show ' + isReadClass)
+                    .data('id', notification.notificationId) // Thêm data-id với notificationId
+                    .html(`
+                        <strong>${notification.message}</strong>
+                        <p><i>Ngày: ${new Date(notification.dateSent).toLocaleString()}</i></p>
+                        <div class="unread-indicator"></div> <!-- Chấm đỏ cho thông báo chưa đọc -->
+                    `);
+
+                notificationDropdown.append(notificationItem);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Lỗi khi tải thông báo:', error);
+        }
+    });
+}
+
+
+
+// Cập nhật thông báo khi trang web được tải
+window.onload = function() {
+    const userId = @Context.Session.GetInt32("UserId"); // Thay thế với userId thực tế, có thể lấy từ session hoặc từ cookie
+    loadNotifications(userId); // Truyền userId vào hàm
+};
+
+$(document).on('click', '.notification-item', function() {
+    const notificationId = $(this).data('id'); // Lấy ID thông báo
+
+    // Gửi yêu cầu AJAX để đánh dấu là đã đọc
+    $.ajax({
+    url: `/Home/MarkAsRead?notificationId=${notificationId}`,  // Kiểm tra URL ở đây
+    type: 'POST', // Kiểm tra loại HTTP method (POST hay GET)
+    success: function() {
+        // Cập nhật lại UI khi đã đánh dấu là đã đọc
+        $(this).addClass('read').removeClass('unread');
+    },
+    error: function(xhr, status, error) {
+        console.error('Lỗi khi đánh dấu thông báo là đã đọc:', error);
+    }
+});
+
+});
+
+
+
+        // Cập nhật thông báo khi trang web được tải
+       // window.onload = loadNotifications;
+
+
+    </script> *@

@@ -1,0 +1,530 @@
+﻿@model List<ProgressReportModel>
+<style>
+
+.disabled {
+    pointer-events: none; 
+    opacity: 0.5;
+}
+
+.disabled .btn {
+    pointer-events: none;
+}
+
+    #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+     
+
+</style>
+
+<div class="mt-5" id="loadingOverlay" style="display: none;">
+    <div class="loading-message">
+        <p class="loading-text">Đang xử lý...</p>
+        <div class="spinner-border text-black" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Toast container positioned at the top-right -->
+        <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+                <div class="toast-header">
+                    <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                    <strong class="me-auto">Thông báo</strong>
+                    <small class="text-muted">Vừa xong</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                </div>
+                <div class="toast-body" id="toastMessage">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="card" id="report-list">
+    <div class="card-body">
+        <ul class="list-group" id="taskList">
+            @foreach (var report in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center mb-3" id="report-@report.TaskId">
+                    <!-- Thông tin báo cáo -->
+                    <div class="d-flex flex-column">
+                        <strong>Báo cáo hoàn thiện ngày:</strong>
+                        <span>@report.ReportDate</span>
+                        <div class="mt-2">
+                            <span class="badge bg-success">File: @System.IO.Path.GetFileName(report.AttachedFilePath)</span>
+                            <span class="badge ms-2 report-status @(report.Status == "Đã từ chối" ? "bg-danger" : report.Status == "Đã phê duyệt" ? "bg-success" : "bg-warning")">
+                                @report.Status
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Các nút hành động -->
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <!-- Nút Xem chi tiết -->
+                        <button type="button"
+                                class="btn btn-info"
+                                data-bs-toggle="modal"
+                                data-bs-target="#detailsReportModal-@report.ProgressReportId">
+                            Xem chi tiết
+                        </button>
+
+                        <!-- Nút Phê duyệt -->
+                        <button type="button"
+                                class="btn btn-success btnAccept"
+                                data-report-taskId="@report.TaskId"
+                                data-report-progressReportId="@report.ProgressReportId"
+                                data-report-userId="@report.UserId"
+                                data-report-reporter-name="@report.ReporterName"
+                        @(report.Status == "Đã từ chối" || report.Status == "Đã phê duyệt" ? "disabled" : "")>
+                            Phê duyệt
+                        </button>
+
+
+
+                        <!-- Nút Từ chối -->
+                        <button type="button"
+                                class="btn btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#refuseReportModal"
+                                data-report-taskId="@report.TaskId"
+                                data-report-progressReportId="@report.ProgressReportId"
+                                data-description="@report.WorkDescription"
+                                data-report-userId="@report.UserId"
+                                data-reporter-name="@report.ReporterName"
+                        @(report.Status == "Đã từ chối" || report.Status == "Đã phê duyệt" ? "disabled" : "")>
+                            Từ chối
+                        </button>
+                    </div>
+                </li>
+                <!-- Modal Chi tiết -->
+                <div class="modal fade"
+                     id="detailsReportModal-@report.ProgressReportId"
+                     tabindex="-1"
+                     aria-labelledby="detailsReportModalLabel-@report.ProgressReportId"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsReportModalLabel-@report.ProgressReportId">Chi tiết báo cáo</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5><strong>Báo cáo của:</strong> @report.ReporterName</h5>
+                                <p><strong>Ngày báo cáo:</strong> <span>@report.ReportDate</span></p>
+                                <p><strong>Mô tả công việc:</strong> <span>@report.WorkDescription</span></p>
+                                <p><strong>Tệp đính kèm:</strong> <span>@report.AttachedFilePath</span></p>
+                                <a href="@report.AttachedFilePath" class="btn btn-primary" target="_blank">Tải xuống</a>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </ul>
+    </div>
+</div>
+
+<!-- Modal từ chối -->
+<div class="modal fade" id="refuseReportModal" tabindex="-1" aria-labelledby="refuseReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="refuseReportModalLabel">Từ chối báo cáo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="RefuseFinalReport" asp-controller="Groups" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <p><strong>*Lưu ý:</strong> Nếu bạn từ chối phê duyệt, giảng viên sẽ nhận được báo cáo này.</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="refuseReason" class="form-label">Lý do từ chối:</label>
+                        <textarea class="form-control" id="refuseReason" name="WorkDescription" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmationInput" class="form-label">Nhập "sure" để từ chối:</label>
+                        <input type="text" class="form-control" id="confirmationInput" name="ConfirmationInput" required />
+                    </div>
+                    <!-- Truyền dữ liệu ẩn để gửi về controller -->
+                    <input type="hidden" name="TaskId" id="hiddenReportTaskId">
+                    <input type="hidden" name="ProgressReportId" id="hiddenProgressReportId">
+                    <input type="hidden" name="UserId" id="hiddenUserId">
+                    <input type="hidden" name="ReporterName" id="hiddenUserName">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger btn-refuse" id="refuseButton" disabled>Từ chối</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        //nút phê duyệt
+    $(document).ready(function () {
+        // Lắng nghe sự kiện click vào nút "Phê duyệt"
+        $("button.btnAccept").click(function () {
+            // Lấy dữ liệu từ thuộc tính data-* của nút
+            var taskId = $(this).data("report-taskid");
+            var progressReportId = $(this).data("report-progressreportid");
+            var userId = $(this).data("report-userid");
+            var reporterName = $(this).data("report-reporter-name");
+
+            // Hiển thị overlay loading
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex'; // Hiển thị overlay
+
+            // Gửi AJAX POST request tới controller
+            $.ajax({
+                url: '/Groups/AcceptFinalReport', // Địa chỉ action controller của bạn (thay đổi nếu cần)
+                type: 'POST',
+                data: {
+                    TaskId: taskId,
+                    ProgressReportId: progressReportId,
+                    UserId: userId,
+                    ReporterName: reporterName
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Cập nhật lại phần nội dung báo cáo sau khi phê duyệt
+                        $("#report-list").html(response.htmlContent); // Giả sử #report-list chứa danh sách báo cáo
+
+                        // Hiển thị thông báo toast
+                        const toastMessage = document.getElementById("toastMessage");
+                        if (toastMessage) {
+                            toastMessage.textContent = response.message;
+                            const toast = new bootstrap.Toast(toastMessage);
+                            toast.show();
+                        }
+
+                    } else {
+                        // Thông báo lỗi nếu không thành công
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    // Thông báo lỗi khi có sự cố trong quá trình AJAX
+                    alert("Có lỗi xảy ra khi gửi yêu cầu.");
+                },
+                complete: function () {
+                    // Ẩn overlay loading khi yêu cầu hoàn tất (dù thành công hay thất bại)
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+    });
+
+
+        //nút từ chối
+    $(document).ready(function () {
+        // Lắng nghe sự kiện click vào nút "Từ chối"
+        $("button[data-bs-target='#refuseReportModal']").click(function () {
+            // Lấy dữ liệu từ thuộc tính data-* của nút
+            var taskId = $(this).data("report-taskid");
+            var progressReportId = $(this).data("report-progressreportid");
+            var userId = $(this).data("report-userid");
+            var reporterName = $(this).data("reporter-name");
+            var workDescription = $(this).data("description");
+            const toastMessage = document.getElementById("toastMessage");
+
+            // Cập nhật dữ liệu vào các trường ẩn trong modal
+            $('#hiddenReportTaskId').val(taskId);
+            $('#hiddenProgressReportId').val(progressReportId);
+            $('#hiddenUserId').val(userId);
+            $('#hiddenUserName').val(reporterName);
+            $('#refuseReason').val(workDescription); // Điền lý do từ chối mặc định
+
+            // Mở modal
+            $('#refuseReportModal').modal('show');
+        });
+
+        // Lắng nghe sự kiện nhập vào ô "Nhập 'sure'" để kích hoạt nút từ chối
+        $('#confirmationInput').on('input', function () {
+            const refuseButton = $('#refuseButton');
+            const confirmationInput = $('#confirmationInput').val().toLowerCase();
+            refuseButton.prop('disabled', confirmationInput !== 'sure');
+        });
+
+        // Xử lý gửi form từ chối báo cáo
+        $('#refuseReportModal form').submit(function (e) {
+            e.preventDefault(); // Ngăn việc submit form mặc định
+
+            var taskId = $('#hiddenReportTaskId').val();
+            var progressReportId = $('#hiddenProgressReportId').val();
+            var userId = $('#hiddenUserId').val();
+            var reporterName = $('#hiddenUserName').val();
+            var workDescription = $('#refuseReason').val();
+
+            // Hiển thị overlay loading
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex'; // Hiển thị overlay
+
+            // Gửi AJAX POST request tới controller
+            $.ajax({
+                url: '/Groups/RefuseFinalReport', // Địa chỉ action controller của bạn
+                type: 'POST',
+                data: {
+                    TaskId: taskId,
+                    ProgressReportId: progressReportId,
+                    UserId: userId,
+                    ReporterName: reporterName,
+                    WorkDescription: workDescription
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Cập nhật lại phần nội dung báo cáo sau khi từ chối
+                        $("#report-list").html(response.htmlContent); // Giả sử #report-list chứa danh sách báo cáo
+
+                        // Hiển thị thông báo toast
+                        const toastMessage = document.getElementById("toastMessage");
+                        if (toastMessage) {
+                            toastMessage.textContent = response.message;
+                            const toast = new bootstrap.Toast(toastMessage);
+                            toast.show();
+                        }
+
+                        // Đóng modal sau khi thành công
+                        // Đóng tất cả các modal đang mở
+                        const modals = document.querySelectorAll('.modal.show');
+                        modals.forEach(modalEl => {
+                            const modal = bootstrap.Modal.getInstance(modalEl);
+                            modal.hide();  // Đóng modal
+                        });
+                    } else {
+                        // Thông báo lỗi nếu không thành công
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    // Thông báo lỗi khi có sự cố trong quá trình AJAX
+                    alert("Có lỗi xảy ra khi gửi yêu cầu.");
+                },
+                complete: function () {
+                    // Ẩn overlay loading khi yêu cầu hoàn thành (dù thành công hay thất bại)
+                    loadingOverlay.style.display = 'none';
+                }
+            });
+        });
+    });
+
+
+
+</script>
+@*     <script>
+
+    const acceptButtons = document.querySelectorAll('.btnAccept');
+
+    acceptButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            console.log("Nút phê duyệt đã được nhấn.");
+            event.preventDefault(); // Ngăn chặn hành động mặc định của form (submit)
+
+            // Hiển thị overlay loading
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex'; // Hiển thị overlay
+            }
+
+            // Lấy các giá trị từ các thuộc tính data-* của button
+            const taskId = button.getAttribute('data-report-taskId');
+            const progressReportId = button.getAttribute('data-report-progressReportId');
+            const userId = button.getAttribute('data-report-userId');
+            const reporterName = button.getAttribute('data-reporter-name');
+            console.log("TaskId: " + taskId);
+            console.log("ProgressReportId: " + progressReportId);
+            console.log("User  Id: " + userId);
+            console.log("ReporterName: " + reporterName);
+
+            // Gửi yêu cầu AJAX để phê duyệt báo cáo
+            $.ajax({
+                url: '/Groups/AcceptFinalReport',  // Đảm bảo URL đúng
+                type: 'POST',
+                dataType: 'json',  // Đảm bảo rằng phản hồi từ server là JSON
+                data: {
+                    TaskId: taskId,
+                    ProgressReportId: progressReportId,
+                    UserId: userId,
+                    ReporterName: reporterName,
+                },
+                success: handleSuccessResponse,
+                error: handleErrorResponse, // Xử lý lỗi nếu có
+                complete: () => {
+                    // Ẩn overlay loading khi yêu cầu hoàn thành
+                    if (loadingOverlay) {
+                        loadingOverlay.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+
+
+
+    function handleErrorResponse(jqXHR, textStatus, errorThrown) {
+        console.error("Lỗi trong yêu cầu AJAX:", textStatus, errorThrown);
+        alert("Có lỗi xảy ra trong quá trình xử lý yêu cầu.");
+    }
+
+
+
+
+// Ensure proper references to DOM elements
+const confirmationInput = document.getElementById('confirmationInput');
+const refuseButton = document.getElementById('refuseButton');
+
+const toastMessage = document.getElementById("toastMessage");
+
+// Function to enable/disable "Refuse" button based on input value
+confirmationInput.addEventListener('input', () => {
+    refuseButton.disabled = confirmationInput.value.toLowerCase() !== 'sure';
+});
+
+// Function to update the report modal details
+function updateReportModal({ reportDate, attachedFile, workDescription, reporterName }) {
+    const fileDownloadLink = reportModal.querySelector('#fileDownloadLink');
+    
+    reportModal.querySelector('.modal-title').textContent = `Chi tiết báo cáo ngày: ${reportDate}`;
+    reportModal.querySelector('#reportDate').textContent = reportDate;
+    reportModal.querySelector('#attachedFile').textContent = attachedFile || 'Không có tệp';
+    reportModal.querySelector('#workDescription').textContent = workDescription || 'Chưa có mô tả';
+    reportModal.querySelector('#reportUserName').textContent = `Báo cáo của: ${reporterName}`;
+
+    // Show or hide the file download link
+    if (attachedFile) {
+        fileDownloadLink.style.display = 'inline';
+        fileDownloadLink.href = attachedFile;
+    } else {
+        fileDownloadLink.style.display = 'none';
+    }
+}
+
+    document.getElementById('refuseReportModal').addEventListener('show.bs.modal', (event) => {
+        const button = event.relatedTarget;
+        const modal = event.target;
+
+        // Set hidden input values from data attributes of the clicked button
+        modal.querySelector('#hiddenReportTaskId').value = button.getAttribute('data-report-taskid');
+        modal.querySelector('#hiddenProgressReportId').value = button.getAttribute('data-report-progressreportid');
+        modal.querySelector('#hiddenUserId').value = button.getAttribute('data-report-userId');
+        modal.querySelector('#hiddenUserName').value = button.getAttribute('data-reporter-name');
+    });
+
+    // Gắn sự kiện `click` cho nút từ chối
+    document.getElementById('refuseButton').addEventListener('click', (event) => {
+        event.preventDefault(); // Ngăn chặn submit form mặc định
+
+        // Hiển thị overlay loading
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        loadingOverlay.style.display = 'flex'; // Hiển thị overlay
+
+        // Lấy giá trị từ các trường input và textarea
+        const workDescription = document.getElementById("refuseReason").value;
+        const reportTaskId = document.getElementById("hiddenReportTaskId").value;
+        const progressReportId = document.getElementById("hiddenProgressReportId").value;
+        const userId = document.getElementById("hiddenUserId").value;
+        const userName = document.getElementById("hiddenUserName").value;
+
+        console.log("Sending data:", { TaskId: reportTaskId, ProgressReportId: progressReportId, UserId: userId, WorkDescription: workDescription });
+
+        // Gửi dữ liệu qua AJAX tới server
+        $.ajax({
+            type: 'POST',
+            url: '/Groups/RefuseFinalReport', // URL cho action controller
+            data: {
+                TaskId: reportTaskId,
+                ProgressReportId: progressReportId,
+                UserId: userId,
+                WorkDescription: workDescription,
+                ReporterName: userName
+            },
+            success: handleSuccessResponse,
+            error: handleAjaxError, // Xử lý lỗi
+            complete: () => {
+                // Ẩn overlay loading khi yêu cầu hoàn thành
+                loadingOverlay.style.display = 'none';
+            }
+        });
+    });
+
+    // Success response handler
+    // Success response handler
+    function handleSuccessResponse(response) {
+        console.log("Server response:", response);  // Log the entire response to check it
+
+        // Kiểm tra nếu phản hồi có success field và thành công
+        if (response && response.success) {
+            // Hiển thị thông báo Toast thành công
+            if (toastMessage) {
+                toastMessage.textContent = response.message;
+                const toast = new bootstrap.Toast(document.querySelector('.toast'));
+                toast.show();
+            }
+
+            // Đóng tất cả các modal đang mở
+            const modals = document.querySelectorAll('.modal.show');
+            modals.forEach(modalEl => {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();  // Đóng modal
+            });
+
+            // Cập nhật trạng thái báo cáo
+            const reportLi = document.getElementById(`report-${response.reportId}`);
+            if (reportLi) {
+                const reportStatus = reportLi.querySelector('.report-status');
+                if (reportStatus) {
+                    // Cập nhật trạng thái và màu sắc của báo cáo
+                    if (response.message.includes('phê duyệt')) {
+                        reportStatus.textContent = "Đã phê duyệt";
+                        reportStatus.classList.remove('bg-warning', 'bg-danger'); // Xóa lớp màu cũ
+                        reportStatus.classList.add('bg-success'); // Thêm màu xanh cho "Đã phê duyệt"
+                    } else if (response.message.includes('từ chối')) {
+                        reportStatus.textContent = "Đã từ chối";
+                        reportStatus.classList.remove('bg-warning', 'bg-success');
+                        reportStatus.classList.add('bg-danger'); // Thêm màu đỏ cho "Đã từ chối"
+                    }
+                }
+                // Vô hiệu hóa tất cả các button và thay đổi độ mờ của báo cáo
+                reportLi.querySelectorAll('button').forEach(button => button.disabled = true);
+                reportLi.style.opacity = '0.5';
+            } else {
+                console.error("Không tìm thấy phần tử báo cáo để cập nhật.");
+            }
+        } else {
+            console.error("Lỗi trong phản hồi:", response);
+            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+        }
+    }
+
+
+    // Xử lý lỗi AJAX
+    function handleAjaxError(jqXHR, textStatus, errorThrown) {
+        console.error("Lỗi trong yêu cầu AJAX:", textStatus, errorThrown);
+        alert("Có lỗi xảy ra trong quá trình xử lý yêu cầu.");
+    }
+
+// Error handler for AJAX
+function handleAjaxError(xhr, status, error) {
+    console.error("AJAX error:", status, error);  // Log the error if any
+    alert("Có lỗi xảy ra. Vui lòng thử lại.");
+}
+</script> *@
+
+
+

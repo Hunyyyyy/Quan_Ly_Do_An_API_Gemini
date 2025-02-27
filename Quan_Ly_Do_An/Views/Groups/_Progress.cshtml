@@ -1,0 +1,443 @@
+﻿@model ProjectProgressViewModel
+@{
+   
+}
+<!-- Cảnh báo tiến độ dự án -->
+<style>
+    /* CSS tùy chỉnh */
+    .content {
+        padding: 20px;
+    }
+
+    .tab-content {
+        margin-top: 20px;
+    }
+
+    .nav-tabs {
+        justify-content: center;
+    }
+
+    .chart-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+</style>
+@if (!Model.PhaseComparison.Any())
+{
+    <div class="alert alert-info text-center fw-bold">
+        <i class="bi bi-info-circle-fill"></i> Chưa có giai đoạn nào được tạo cho dự án này.
+    </div>
+}
+else if (Model.PhaseComparison.Any(p => p.Status == "danger"))
+{
+    <div class="alert alert-danger text-center fw-bold">
+        <i class="bi bi-exclamation-triangle-fill"></i> Tiến độ dự án đang bị chậm. Hãy kiểm tra và điều chỉnh kế hoạch.
+    </div>
+}
+else if (Model.PhaseComparison.Any(p => p.Status == "warning"))
+{
+    <div class="alert alert-warning text-center fw-bold">
+        <i class="bi bi-exclamation-circle-fill"></i> Tiến độ dự án đang ở mức trung bình. Hãy tăng cường theo dõi công việc.
+    </div>
+}
+else
+{
+    <div class="alert alert-success text-center fw-bold">
+        <i class="bi bi-check-circle-fill"></i> Tiến độ dự án đang hoàn thành tốt!
+    </div>
+}
+
+    <!-- Navbar phía trên (cho chọn tab) -->
+    <ul class="nav nav-tabs" id="progressTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Bảng tiến độ tổng thể</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="phase-tab" data-bs-toggle="tab" href="#phase" role="tab" aria-controls="phase" aria-selected="false">So sánh tiến độ giai đoạn</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="member-tab" data-bs-toggle="tab" href="#member" role="tab" aria-controls="member" aria-selected="false">Tiến độ công việc của các thành viên</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="chart-tab" data-bs-toggle="tab" href="#chart" role="tab" aria-controls="chart" aria-selected="false">Biểu đồ tiến độ tổng thể</a>
+        </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="group-tab" data-bs-toggle="tab" href="#group" role="tab" aria-controls="group" aria-selected="false">Thống kê nhóm</a>
+    </li>
+    </ul>
+
+    <!-- Nội dung chính -->
+    <div class="tab-content" id="progressTabsContent">
+        <!-- Bảng tiến độ tổng thể -->
+       <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+    <section class="mt-4">
+        <h3 class="text-center">Thống kê số liệu hiện tại của nhóm</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Chỉ số</th>
+                    <th>Giá trị</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số nhiệm vụ đã tạo trong dự án">
+                    <td>Tổng số nhiệm vụ đã tạo</td>
+                    <td>@Model.GroupProgress.TotalTasksCreated</td>
+                </tr>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số nhiệm vụ đã được giao cho người dùng">
+                    <td>Tổng số nhiệm vụ đã nhận</td>
+                    <td>@Model.GroupProgress.TotalTasksAssigned</td>
+                </tr>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số công việc phụ được tạo cho từng nhiệm vụ">
+                    <td>Tổng số công việc phụ đã tạo</td>
+                    <td>@Model.GroupProgress.TotalSubTasksCreated</td>
+                </tr>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số báo cáo tiến độ đã được nộp">
+                    <td>Tổng số báo cáo tiến độ đã nộp</td>
+                    <td>@Model.GroupProgress.TotalReportsSubmitted</td>
+                </tr>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số báo cáo đã được phê duyệt và hoàn thiện">
+                    <td>Tổng số báo cáo hoàn thiện đã nộp</td>
+                    <td>@Model.GroupProgress.TotalReportsCompleted</td>
+                </tr>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Số báo cáo bị từ chối vì không đạt yêu cầu">
+                    <td>Tổng số báo cáo bị từ chối</td>
+                    <td>@Model.GroupProgress.TotalReportsFail</td>
+                </tr>
+                <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tỷ lệ hoàn thành dựa trên số báo cáo hoàn thiện đã nộp so với tổng số báo cáo đã nộp">
+                    <td>Tỷ lệ hoàn thành</td>
+                    <td>@Model.GroupProgress.CompletionPercentage%</td>
+                </tr>
+                   <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tỷ lệ báo cáo hoàn thành so với tổng số báo cáo đã nộp.">
+                    <td>Tỷ lệ hoàn thành báo cáo</td>
+                    <td>@Model.GroupProgress.CompletionRate %</td>
+                </tr>
+                 </tr>
+                   <tr data-bs-toggle="tooltip" data-bs-placement="top" title="Tỷ lệ nhiệm vụ đã có ít nhất một báo cáo hoàn thành so với tổng số nhiệm vụ đã tạo.">
+                     <td>Tỷ lệ hoàn thành nhiệm vụ</td>
+                    <td>@Model.GroupProgress.TaskCompletionRate %</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#explanationModal">
+            Xem giải thích chi tiết
+        </button>
+
+        <!-- Modal giải thích chi tiết -->
+        <div class="modal fade" id="explanationModal" tabindex="-1" aria-labelledby="explanationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="explanationModalLabel">Giải thích về các chỉ số tiến độ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Tỷ lệ hoàn thành (Completion Rate):</h5>
+                        <p>Tỷ lệ hoàn thành được tính bằng công thức:</p>
+                        <pre>(Số báo cáo hoàn thiện đã nộp / Tổng số báo cáo đã nộp) * 100</pre>
+                        <p><strong>Ví dụ:</strong> Nếu bạn đã nộp 8 báo cáo và có 6 báo cáo được phê duyệt, tỷ lệ hoàn thành là (6 / 8) * 100 = 75%.</p>
+                        
+                        <h5>Tỷ lệ nhiệm vụ hoàn thành (Task Completion Rate):</h5>
+                        <p>Tỷ lệ nhiệm vụ hoàn thành được tính bằng công thức:</p>
+                        <pre>(Số nhiệm vụ hoàn thành / Tổng số nhiệm vụ đã tạo) * 100</pre>
+                        <p><strong>Ví dụ:</strong> Nếu có 5 nhiệm vụ, và 4 nhiệm vụ đã hoàn thành, tỷ lệ hoàn thành nhiệm vụ là (4 / 5) * 100 = 80%.</p>
+                        
+                        <h5>Tổng số báo cáo hoàn thiện:</h5>
+                        <p>Số báo cáo đã được phê duyệt và hoàn thiện, xác nhận rằng công việc đã hoàn thành đúng yêu cầu.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+    <!-- Biểu đồ tiến độ tổng thể -->
+
+    <div class="tab-pane fade" id="chart" role="tabpanel" aria-labelledby="chart-tab">
+    <section class="mt-4">
+        <h5 class="text-center text-primary fw-bold mb-4">
+            <i class="bi bi-bar-chart-fill"></i> Biểu đồ tiến độ của từng thành viên
+        </h5>
+        <div class="chart-container">
+            <canvas id="userProgressChart" width="400" height="200"></canvas>
+        </div>
+    </section>
+    </div>
+
+    <!-- So sánh tiến độ giai đoạn -->
+    <div class="tab-pane fade" id="phase" role="tabpanel" aria-labelledby="phase-tab">
+        <section>
+            <h5 class="text-center text-primary fw-bold mb-4">
+                <i class="bi bi-bar-chart-fill"></i> So sánh tiến độ giai đoạn
+            </h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Tên giai đoạn</th>
+                            <th>Số ngày kế hoạch</th>
+                            <th>Tiến độ thực tế (%)</th>
+                            <th>Số ngày đã trôi qua</th>
+                            <th>Tổng số công việc</th>
+                            <th>Số công việc đã hoàn thành</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Lặp qua các giai đoạn từ mô hình -->
+                        @foreach (var phase in Model.PhaseComparison)
+                        {
+                            <tr>
+                                <td>@phase.StageName</td>
+                                <td class="text-center">@phase.PlannedDays</td>
+                                <td class="text-center">
+                                    <span class="fw-bold">@phase.ActualProgress%</span>
+                                </td>
+                                <td class="text-center">@phase.DaysElapsed</td>
+                                <td class="text-center">@phase.TotalSubTasks</td>
+                                <td class="text-center">@phase.CompletedSubTasks</td>
+                                <td class="text-center">
+                                    <span class="badge bg-@phase.Status">@phase.Status.ToUpper()</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+
+        <!-- Tiến độ công việc của các thành viên -->
+        <div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab">
+            <section class="mt-5">
+                <h5 class="text-center text-primary fw-bold mb-4">
+                    <i class="bi bi-people-fill"></i> Tiến độ công việc của các thành viên
+                </h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead class="table-success text-center">
+                            <tr>
+                                <th>Tên thành viên</th>
+                                <th>Số nhiệm vụ</th>
+                                <th>Tổng số công việc phụ</th>
+                                <th>Công việc phụ hoàn thành</th>
+                                <th>Phần trăm tiến độ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Lặp qua các thành viên từ mô hình -->
+                            @foreach (var item in Model.MemberProgress)
+                            {
+                                <tr>
+                                    <td>@item.MemberName</td>
+                                    <td class="text-center">@item.TotalTasks</td>
+                                    <td class="text-center">@item.TotalSubTasks</td>
+                                    <td class="text-center">@item.CompletedSubTasks</td>
+                                    <td class="text-center">
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: @item.ProgressPercentage%" aria-valuenow="@item.ProgressPercentage" aria-valuemin="0" aria-valuemax="100">
+                                                @item.ProgressPercentage%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    <div class="tab-pane fade" id="group" role="tabpanel" aria-labelledby="group-tab">
+        <h5 class="text-center text-primary fw-bold mb-4">
+            <i class="bi bi-people-fill"></i>Thống kê nhóm
+        </h5>
+        <h3>Nhiệm vụ có hạn nộp sắp đến hoặc đã trễ</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên nhiệm vụ</th>
+                    <th>Hạn nộp</th>
+                    <th>Trạng thái</th>
+                    <th>Số ngày còn lại</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.ProjectIssuesView.TasksWithDeadlineIssues)
+                {
+                    <tr>
+                        <td>@task.TaskName</td>
+                        <td>@task.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>@task.UpdatedStatus</td>
+                        @if (task.UpdatedStatus != "Đã hoàn thành")
+                        {
+                            <td>
+                                @if (task.DaysRemaining >= 1 && task.DaysRemaining <= 3)
+                                {
+                                    <span class="b" style="color: orange;">@task.DaysRemaining</span> <!-- Màu cam cho 1-3 ngày -->
+                                }
+                                else if (task.DaysRemaining < 1)
+                                {
+                                    <span class="b" style="color: red;">0</span> <!-- Màu đỏ cho quá hạn -->
+                                }
+                                else
+                                {
+                                    <span class="b" style="color: green;">@task.DaysRemaining</span> <!-- Màu xanh cho còn hạn -->
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>Đã hoàn thành</td>
+                        }
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Thành viên không cập nhật tiến độ định kỳ</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên thành viên</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.ProjectIssuesView.MembersNotUpdatingProgress)
+                {
+                    <tr>
+                        <td>@member.FullName</td>
+                        <td>@member.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Thành viên không nhận bất kỳ nhiệm vụ nào</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên thành viên</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.ProjectIssuesView.MembersWithoutTasks)
+                {
+                    <tr>
+                        <td>@member.FullName</td>
+                        <td>@member.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+    </div> 
+<!-- Cần thêm JavaScript cho Tooltip -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+    <script>
+    // Initialize tooltips for the page
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    // Lấy dữ liệu từ model trong Razor
+    var userLabels = @Html.Raw(Json.Serialize(Model.UserProgressView.Select(x => x.UserName).ToArray()));
+    var reportsSubmitted = @Html.Raw(Json.Serialize(Model.UserProgressView.Select(x => x.ReportsSubmitted).ToArray()));
+    var reportsCompleted = @Html.Raw(Json.Serialize(Model.UserProgressView.Select(x => x.ReportsCompleted).ToArray()));
+    var reportsRejected = @Html.Raw(Json.Serialize(Model.UserProgressView.Select(x => x.ReportsRejected).ToArray()));
+    var reportsInProgress = @Html.Raw(Json.Serialize(Model.UserProgressView.Select(x => x.ReportsInProgress).ToArray()));
+    var completionRate = @Html.Raw(Json.Serialize(Model.UserProgressView.Select(x => x.CompletionRate).ToArray()));
+
+    var ctx = document.getElementById('userProgressChart').getContext('2d');
+    if (!ctx) {
+        console.error('Canvas không tồn tại hoặc không tìm thấy phần tử "userProgressChart".');
+    } else {
+        console.log('Canvas tồn tại, bắt đầu khởi tạo biểu đồ.');
+    }
+
+    // Khởi tạo biểu đồ cột chồng
+    var userProgressChart = new Chart(ctx, {
+        type: 'bar', // Đổi type thành 'bar' để sử dụng biểu đồ cột
+        data: {
+            labels: userLabels, // Danh sách tên thành viên
+            datasets: [{
+                label: 'Số báo cáo đã nộp',
+                data: reportsSubmitted,
+                backgroundColor: 'rgba(0, 255, 0, 0.7)',
+                borderColor: '#00FF00',
+                borderWidth: 1
+            }, {
+                label: 'Số báo cáo hoàn thiện',
+                data: reportsCompleted,
+                backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                borderColor: '#4CAF50',
+                borderWidth: 1
+            }, {
+                label: 'Số báo cáo bị từ chối',
+                data: reportsRejected,
+                backgroundColor: 'rgba(255, 76, 0, 0.7)',
+                borderColor: '#FF4C00',
+                borderWidth: 1
+            }, {
+                label: 'Số báo cáo đang tiến hành',
+                data: reportsInProgress,
+                backgroundColor: 'rgba(255, 221, 0, 0.7)',
+                borderColor: '#FFDD00',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return tooltipItem.raw;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true,
+                    stacked: true, // Bật chế độ chồng cột
+                }
+            }
+        }
+    });
+</script>
+
+
+
+  
+
+
+

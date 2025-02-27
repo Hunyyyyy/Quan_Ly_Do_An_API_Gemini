@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "MainLayout";
+}
+@model Quan_Ly_Do_An.Models.UserModel
+<style>
+    body {
+        background: rgb(99, 39, 120)
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #BA68C8
+    }
+
+    .profile-button {
+        background: rgb(99, 39, 120);
+        box-shadow: none;
+        border: none
+    }
+
+        .profile-button:hover {
+            background: #682773
+        }
+
+        .profile-button:focus {
+            background: #682773;
+            box-shadow: none
+        }
+
+        .profile-button:active {
+            background: #682773;
+            box-shadow: none
+        }
+
+    .back:hover {
+        color: #682773;
+        cursor: pointer
+    }
+
+    .labels {
+        font-size: 11px
+    }
+
+    .add-experience:hover {
+        background: #BA68C8;
+        color: #fff;
+        cursor: pointer;
+        border: solid 1px #BA68C8
+    }
+
+    .rounded-circle{
+        position: relative;
+    }
+
+    #profile-img-container {
+        position: relative;
+
+    }
+
+    .rounded-circle {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .bi-camera-fill {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+         display: none;
+        background-color: darkgrey;
+        color: black;
+        border: none;
+        border-radius: 50%;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+    #profile-img-container:hover .bi-camera-fill {
+        display: block;
+        
+    }
+        </style>
+<div class="container rounded bg-white mt-5 mb-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div id="profile-img-container" class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img class="rounded-circle mt-5" width="150px" src="~/dist/assets/img/profile.png">
+                <i class="bi bi-camera-fill"></i>
+                <span class="font-weight-bold">@Model.FullName</span>
+                <span class="text-black-50">@Model.Email</span>
+            </div>
+        </div>
+
+        <div class="col-md-7 border-right">
+            <form method="post" asp-action="UpdateUserTable" asp-controller="UserInformation">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Thông tin cá nhân</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label class="labels">Họ và tên</label>
+                            <input name="fullname" type="text" class="form-control" placeholder="first name" value="@Model.FullName" required>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="labels">Số điện thoại</label>
+                            <input type="number" class="form-control" placeholder="enter phone number" value="">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Địa chỉ</label>
+                            <input type="text" class="form-control" placeholder="enter address line 1" value="">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Email</label>
+                            <input class="form-control" type="email" name="gmail" id="gmail" placeholder="Nhập Gmail trường Duy Tân" value="@Model.Email" maxlength="40" disabled>
+                            
+                        </div>
+                        @if (Model.Role == "student")
+                        {
+                            <div class="col-md-12">
+                                <label class="labels">Mã sinh viên</label>
+                                <input name="stdentcode" type="text" class="form-control" id="studentCodeInput" name="studentCode" maxlength="11" value="@Model.StudentCode" required>
+                                <span id="Feedback" class="far" style="margin-top:7px"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-12">
+                                <label class="labels">Mã giảng viên</label>
+                                <input name="stdentcode" type="text" class="form-control" id="studentCodeInput" name="studentCode" maxlength="11" value="@Model.StudentCode" required>
+                                <span id="Feedback" class="far" style="margin-top:7px"></span>
+                            </div>
+                        }
+
+                        <div class="col-md-12">
+                            <label class="labels">Ngày sinh</label>
+                            <input type="date" class="form-control" placeholder="enter address line 2" value="">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Khoa</label>
+                            <input type="text" class="form-control" placeholder="enter email id" value="Công nghệ thông tin" disabled>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Trường</label>
+                            <input type="text" class="form-control" placeholder="education" value="Đại Học Duy Tân" disabled>
+                        </div>
+                    </div>
+                    <div class="mt-5 text-center">
+                        <button id="submitProfile" class="btn btn-primary profile-button" type="submit" >Save Profile</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Kiểm tra mã sinh viên
+        $('#studentCodeInput').on('input', function () {
+            var studentCode = $(this).val();
+
+            // Kiểm tra nếu mã sinh viên là 11 chữ số và không chứa ký tự khác
+            var isValidCode = /^[0-9]{11}$/.test(studentCode);
+
+            if (isValidCode) {
+                $('#Feedback').text('Mã hợp lệ.').css('color', 'green');
+                $('#submitProfile').prop('disabled', false); // Kích hoạt nút khi mã sinh viên hợp lệ
+            } else {
+                $('#Feedback').text('Mã phải là 11 chữ số, không chứa chữ cái hoặc ký tự đặc biệt.').css('color', 'red');
+                $('#submitProfile').prop('disabled', true); // Vô hiệu hóa nút khi mã sinh viên không hợp lệ
+            }
+        });
+    });
+</script>
+

@@ -1,0 +1,96 @@
+﻿@model List<TaskModel>
+<style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-10px); /* Di chuyển lên trên khi hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng mờ */
+        }
+
+    .no-results-message {
+        padding: 10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
+@if (TempData["Message"] != null)
+{
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <!-- Toast container positioned at the top-right -->
+        <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+                <div class="toast-header">
+                    <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                    <strong class="me-auto">Thông báo</strong>
+                    <small class="text-muted">Vừa xong</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                </div>
+                <div class="toast-body" id="toastMessage">
+                    @TempData["Message"]
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.querySelector('.toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+}  
+    <div class="row" id="taskCardsContainer" >
+        @foreach (var task in Model)
+        {
+        <div class="col-md-4 mb-4" data-task-id="@task.TaskId" data-status="@task.Status" data-assigned-user="@task.AssignedUserName" data-priority="@task.Priority" data-start-date="@task.StartDate" data-end-date="@task.EndDate">
+                <form method="post" asp-action="GetDataIndex" asp-controller="Work">
+                    <input type="hidden" name="TaskId" value="@task.TaskId" />
+                    <input type="hidden" name="ProjectId" value="@task.ProjectId" />
+                    <input type="hidden" name="AssignedToUserId" value="@task.AssignedToUserId" />
+                    <input type="hidden" name="TaskName" value="@task.TaskName" />
+                    <input type="hidden" name="ProjectName" value="@task.ProjectName" />
+                    <input type="hidden" name="AssignedUserName" value="@task.AssignedUserName" />
+                    <input type="hidden" name="Description" value="@task.Description" />
+                    <input type="hidden" name="StartDate" value="@task.StartDate" />
+                    <input type="hidden" name="EndDate" value="@task.EndDate" />
+                    <input type="hidden" name="Status" value="@task.Status" />
+                    <input type="hidden" name="SubmissionTypes" value="@String.Join(",", task.SubmissionTypes)" />
+
+
+                    <input type="hidden" name="AttachmentPath" value="@task.AttachmentPath" />
+                    <input type="hidden" name="Notes" value="@task.Notes" />
+                    <input type="hidden" name="Priority" value="@task.Priority" />
+                    <!-- Các input ẩn khác như trước -->
+                    <div class="card shadow-sm rounded">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title">@task.TaskName</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Bắt đầu:</strong> <span class="badge bg-primary">@task.StartDate</span></p>
+                            <p><strong>Kết thúc:</strong> <span class="badge bg-danger">@task.EndDate</span></p>
+                            <p><strong>Trạng thái:</strong> <span class="badge bg-success">@task.Status</span></p>
+                            <p><strong>Ưu tiên:</strong> @task.Priority</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success w-100">Làm việc</button>
+                          
+                              
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+
+    
+ 
+
+   

@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewData["Title"] = "CreateTask";
+    Layout = "MainLayout";
+}
+<style>
+    label {
+        font-weight: 700;
+    }
+</style>
+
+
+@if (TempData["Message"] != null)
+  {
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <!-- Toast container positioned at the top-right -->
+    <div class="toast-container position-fixed top-10 end-0 p-2" style="z-index: 1050;">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <i class="bi bi-bell-fill rounded me-2" style="color: yellow; font-size: 1.5rem;"></i>
+                <strong class="me-auto">Thông báo</strong>
+                <small class="text-muted">Vừa xong</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Đóng"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Message"]
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Script to auto-show and hide toast after 3 seconds -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.querySelector('.toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    </script>
+ } 
+
+
+
+
+<div class="container mt-4">
+    <h2 class="text-primary">Tạo Nhiệm Vụ Mới</h2>
+    <!-- Dropdown chọn Giai Đoạn -->
+    <div class="mb-3">
+        <label for="phaseSelect" class="form-label">Chọn Giai Đoạn</label>
+        <select class="form-select" id="phaseSelect" required>
+            <option value="">Chọn Giai Đoạn</option>
+            @foreach (var phase in ViewBag.Phases)
+            {
+                <option  value="@phase.StageName" data-start="@phase.StartDate.ToString("yyyy-MM-dd")" data-end="@phase.EndDate.ToString("yyyy-MM-dd") ">
+                    @phase.StageName - từ: @phase.StartDate - đến: @phase.EndDate 
+                </option>
+            }
+        </select>
+    </div>
+    <form style="display:none;" id="taskForm" asp-action="CreateTaskFun" asp-controller="Groups" method="post" enctype="multipart/form-data">
+        <input type="hidden" value="@ViewBag.projectId" name="projectId" />
+        <div class="mb-3">
+            <label for="taskName" class="form-label">Tên nhiệm vụ</label>
+            <input type="text" class="form-control" id="taskName" name="TaskName" maxlength="100" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Mô tả chi tiết</label>
+            <textarea class="form-control" id="description" name="Description" rows="4" required></textarea>
+        </div>
+
+        <!-- Ngày bắt đầu -->
+        <div class="mb-3">
+            <label for="startDate" class="form-label">Ngày bắt đầu</label>
+            <input type="datetime-local" class="form-control date" id="startDate" name="StartDate" required />
+        </div>
+
+        <!-- Ngày kết thúc -->
+        <div class="mb-3">
+            <label for="endDate" class="form-label">Ngày kết thúc</label>
+            <input type="datetime-local" class="form-control date" id="endDate" name="EndDate" required />
+        </div>
+        <select id="assignedUser" name="AssignedToUserId" class="form-control mb-3" required>
+            <option>Chọn người thực hiện</option>
+            @foreach (var task in ViewBag.member)
+            {
+                <option value="@task.UserId">@task.AssignedUserName</option>
+            }
+        </select>
+
+        <input type="hidden" id="selectedPhaseId" name="SelectedPhaseId" />
+        <div class="mb-3">
+            <label for="priority" class="form-label">Mức độ ưu tiên</label>
+            <select class="form-select" id="priority" name="Priority" required>
+                <option value="Cao">Cao</option>
+                <option value="Trung bình">Trung bình</option>
+                <option value="Thấp">Thấp</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="attachments" class="form-label">Tài liệu đính kèm</label>
+            <input type="file" class="form-control" id="attachments" name="Attachments" multiple>
+        </div>
+
+        <div class="mb-3">
+            <label for="notes" class="form-label">Ghi chú thêm</label>
+            <textarea class="form-control" id="notes" name="Notes" rows="2"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nộp bằng:</label>
+            <div class="d-flex flex-wrap">
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileWord" name="SubmissionTypes[]" value="File Word">
+                    <label class="form-check-label" for="fileWord">File Word</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileCode" name="SubmissionTypes[]" value="File Code">
+                    <label class="form-check-label" for="fileCode">File Code</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileDatabase" name="SubmissionTypes[]" value="File Database">
+                    <label class="form-check-label" for="fileDatabase">File Database</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="filePDF" name="SubmissionTypes[]" value="File PDF">
+                    <label class="form-check-label" for="filePDF">File PDF</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileImage" name="SubmissionTypes[]" value="File Image">
+                    <label class="form-check-label" for="fileImage">File Image</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileExcel" name="SubmissionTypes[]" value="File Excel">
+                    <label class="form-check-label" for="fileExcel">File Excel</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileDiagram" name="SubmissionTypes[]" value="File Diagram">
+                    <label class="form-check-label" for="fileDiagram">File Diagram</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileText" name="SubmissionTypes[]" value="File Text">
+                    <label class="form-check-label" for="fileText">File Text</label>
+                </div>
+
+                <!-- Thêm các loại file khác bên dưới -->
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="filePowerPoint" name="SubmissionTypes[]" value="File PowerPoint">
+                    <label class="form-check-label" for="filePowerPoint">File PowerPoint</label>
+                </div>
+                <div class="form-check me-3 mb-2">
+                    <input class="form-check-input" type="checkbox" id="fileCompressed" name="SubmissionTypes[]" value="File Compressed">
+                    <label class="form-check-label" for="fileCompressed">File Nén (ZIP/RAR)</label>
+                </div>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu nhiệm vụ</button>
+        
+    </form>
+</div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lắng nghe sự kiện khi người dùng chọn giai đoạn
+        document.getElementById('phaseSelect').addEventListener('change', function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var startDate = selectedOption.getAttribute('data-start');
+            var endDate = selectedOption.getAttribute('data-end');
+            console.log('startDate', startDate);
+            console.log('endDate', endDate);
+            // Kiểm tra nếu có dữ liệu cho ngày bắt đầu và kết thúc
+            if (startDate && endDate) {
+                // Chuyển đổi định dạng ngày để so khớp với kiểu datetime-local
+                var startDateLocal = startDate + "T00:00"; // Định dạng cho input datetime-local (giờ mặc định là 00:00)
+                var endDateLocal = endDate + "T23:59"; // Định dạng cho input datetime-local (giờ kết thúc là 23:59)
+                console.log('startDateLocal', startDateLocal);
+                console.log('endDateLocal', endDateLocal);
+                // Cập nhật giá trị min và max cho ngày bắt đầu và ngày kết thúc
+                document.getElementById('startDate').min = startDateLocal;
+                document.getElementById('startDate').max = endDateLocal;
+                document.getElementById('endDate').min = startDateLocal;
+                document.getElementById('endDate').max = endDateLocal;
+
+                // Hiển thị form tạo nhiệm vụ
+                document.getElementById('taskForm').style.display = 'block';
+
+                // Cập nhật hidden input với Id của giai đoạn đã chọn
+                document.getElementById('selectedPhaseId').value = selectedOption.value;
+            } else {
+                // Nếu không chọn giai đoạn thì ẩn form tạo nhiệm vụ
+                document.getElementById('taskForm').style.display = 'none';
+            }
+        });
+    });
+</script>
+
+
